@@ -207,7 +207,7 @@ export default function Home() {
               }}
             />
             <Button
-              hidden={search === ""}
+              hidden={(search || getStorage("search")) === ""}
               onClick={() => {
                 setSearch("");
                 localStorage.removeItem("search");
