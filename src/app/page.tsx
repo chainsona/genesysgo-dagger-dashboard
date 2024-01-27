@@ -281,7 +281,7 @@ export default function Home() {
                 key={node.node_id}
                 className={`${backgroundColorHelper(
                   node.status
-                )} md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0`}
+                )} md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-950`}
                 hover={true}
               >
                 <span className="block text-center pr-4 text-lg">
