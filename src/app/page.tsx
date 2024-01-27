@@ -48,14 +48,14 @@ function statusHelper(status: string) {
 
 function backgroundColorHelper(status: string) {
   switch (status) {
-    // case "top_150":
-    //   return "bg-green-900";
+    case "top_150":
+      return "bg-green-950";
     case "queued":
-      return "bg-yellow-900";
+      return "bg-sky-950";
     case "not_eligible":
       return "bg-red-900";
     default:
-      return "bg-gray-900";
+      return "bg-gray-950";
   }
 }
 
@@ -180,9 +180,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-4">
-        Rank Top 150 nodes, queued then the rest by uptime.
-      </div>
+      <div className="p-4">Rank Top 150 nodes, queued then the rest by uptime.</div>
 
       <div className="flex w-full px-4">
         <Table className="w-full">
