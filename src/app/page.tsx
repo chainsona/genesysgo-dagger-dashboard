@@ -169,28 +169,29 @@ export default function Home() {
               localStorage.setItem("search", keyword);
             }}
           />
-
-          <Input
-            id="refresh"
-            placeholder="Refresh interval (minutes)"
-            className="w-20 px-4 py-2 bg-base-100 rounded-md"
-            value={getStorage("refresh") || refresh}
-            type="number"
-            min={1}
-            onChange={() => {
-              try {
-                const minutes = (
-                  document.getElementById("refresh") as HTMLInputElement
-                ).value;
-                parseInt(minutes);
-                localStorage.setItem("refresh", minutes);
-                setRefresh(minutes);
-              } catch (e) {
-                return;
-              }
-            }}
-          />
-
+          <div className="flex flex-row text-right items-center gap-2">
+            <div className="w-28 text-gray-400 text">Refresh (min)</div>
+            <Input
+              id="refresh"
+              placeholder="Refresh interval (minutes)"
+              className="w-20 px-4 py-2 bg-base-100 rounded-md"
+              value={getStorage("refresh") || refresh}
+              type="number"
+              min={1}
+              onChange={() => {
+                try {
+                  const minutes = (
+                    document.getElementById("refresh") as HTMLInputElement
+                  ).value;
+                  parseInt(minutes);
+                  localStorage.setItem("refresh", minutes);
+                  setRefresh(minutes);
+                } catch (e) {
+                  return;
+                }
+              }}
+            />
+          </div>
           <Select
             className="px-4 py-2 bg-base-100 rounded-md"
             onChange={(event) => {
@@ -219,7 +220,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="text-gray-300 text-sm">
+      <div className="text-gray-400 text-sm">
         ⚠️ Ranking Top 150 nodes, queued then the rest by uptime.
       </div>
 
