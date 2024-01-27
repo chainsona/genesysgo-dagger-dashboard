@@ -153,8 +153,8 @@ export default function Home() {
   }, [search, nodes, sort]);
 
   return (
-    <main className="flex flex-col w-full text-left overflow-x-auto">
-      <div className="flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
+    <main className="flex flex-col w-full text-left overflow-x-auto p-8 gap-4">
+      <div className="flex w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-row gap-4">
           <Input
             id="search"
@@ -219,14 +219,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-4">
-        Rank Top 150 nodes, queued then the rest by uptime.
+      <div className="text-gray-300 text-sm">
+        ⚠️ Ranking Top 150 nodes, queued then the rest by uptime.
       </div>
 
-      <div className="flex w-full px-4">
+      <div className="flex border border-base-100 rounded-xl overflow-hidden">
         <Table className="w-full">
-          <Table.Head>
-            <span className="">Rank</span>
+          <Table.Head className="h-12">
+            <span className="px-4">Rank</span>
             <span className="">Node ID</span>
             <span className="">Status</span>
             <span className="">Discord Verified</span>
@@ -239,7 +239,7 @@ export default function Home() {
             {filteredNodes.map((node: Node) => (
               <Table.Row
                 key={node.node_id}
-                className={`${backgroundColorHelper(node.status)} py-2`}
+                className={`${backgroundColorHelper(node.status)} h-12`}
                 hover={true}
               >
                 <span className="block text-right pr-4">{node.rank}</span>
