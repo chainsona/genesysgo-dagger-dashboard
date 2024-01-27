@@ -282,7 +282,7 @@ export default function Home() {
                 )} md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0`}
                 hover={true}
               >
-                <span className="block text-right pr-4 text-lg">
+                <span className="block text-center pr-4 text-lg">
                   #{node.rank}
                 </span>
                 <span className="flex text-left items-center">
