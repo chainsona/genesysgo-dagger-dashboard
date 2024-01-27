@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Input, Select, Table } from "react-daisyui";
 
 // {
@@ -40,12 +40,17 @@ type Node = {
 };
 
 export default function Home() {
+  const getStorage = useCallback((key: string) => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }, []);
+
   const [nodes, setNodes] = useState<Node[]>([]);
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
-  const [search, setSearch] = useState(localStorage.getItem("search") || "");
-  const [sort, setSort] = useState(
-    localStorage.getItem("sort") || "uptime-desc"
-  );
+  const [search, setSearch] = useState(getStorage("search") || "");
+  const [sort, setSort] = useState(getStorage("sort") || "uptime-desc");
 
   useEffect(() => {
     fetch("https://shdw-rewards-oracle.shdwdrive.com/node-leaderboard")
