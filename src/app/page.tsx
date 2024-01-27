@@ -81,7 +81,7 @@ export default function Home() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
   const [search, setSearch] = useState(getStorage("search") || "");
-  const [sort, setSort] = useState(getStorage("sort") || "uptime-desc");
+  const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
 
   const fetchNodes = useCallback(() => {
@@ -134,6 +134,8 @@ export default function Home() {
         )
         .sort((a: Node, b: Node) => {
           switch (sort) {
+            case "rank-desc":
+              return Number(a.rank) - Number(b.rank);
             case "rewards-asc":
               return Number(a.total_rewards) - Number(b.total_rewards);
             case "rewards-desc":
@@ -143,7 +145,8 @@ export default function Home() {
             case "uptime-asc":
               return Number(a.uptime) - Number(b.uptime);
             default:
-              return 0;
+            case "rank-asc":
+              return Number(b.rank) - Number(a.rank);
           }
         })
     );
@@ -196,6 +199,10 @@ export default function Home() {
             }}
             value={sort}
           >
+            <Select.Option value="rank-desc">
+              Rank (first to last)
+            </Select.Option>
+            <Select.Option value="rank-asc">Rank (last to first)</Select.Option>
             <Select.Option value="rewards-desc">
               Rewards (higher to lower)
             </Select.Option>
