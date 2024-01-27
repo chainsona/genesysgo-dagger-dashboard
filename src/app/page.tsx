@@ -90,19 +90,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) =>
         setNodes(
-          [
-            ...data.nodes
-              .filter((node: Node) => node.status === "top_150")
-              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
-            ...data.nodes
-              .filter((node: Node) => node.status === "queued")
-              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
-            ...data.nodes
-              .filter(
-                (node: Node) => !["top_150", "queued"].includes(node.status)
-              )
-              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
-          ].map((node: Node, i: number) => {
+          data.nodes.map((node: Node, i: number) => {
             return {
               ...node,
               rank: i + 1,
