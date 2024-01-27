@@ -158,7 +158,7 @@ export default function Home() {
           D.A.G.G.E.R. Testnet2 Dashboard
         </div>
         <Link href="https://x.com/chainsona" passHref target="_blank">
-          <div className="text-gray-400 hover:underline">Follow me on 𝕏</div>
+          <div className="text-gray-400 hover:underline">Get updates on 𝕏</div>
         </Link>
       </div>
       <div className="flex flex-row w-full component-preview items-center justify-center gap-2 font-sans">
