@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Input, Select, Table } from "react-daisyui";
+import { Button, Input, Select, Table } from "react-daisyui";
 
 function secondsToDhms(seconds: number) {
   seconds = Number(seconds) / 1000;
@@ -174,19 +174,30 @@ export default function Home() {
 
       <div className="flex flex-row w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-col md:flex-row gap-4">
-          <Input
-            id="search"
-            placeholder="Search by node ID (comma separated)"
-            className="w-full px-4 py-2 bg-base-100 rounded-md"
-            value={search}
-            onChange={() => {
-              const keyword = (
-                document.getElementById("search") as HTMLInputElement
-              ).value;
-              setSearch(keyword);
-              localStorage.setItem("search", keyword);
-            }}
-          />
+          <div className="w-full flex flex-row items-center gap-2">
+            <Input
+              id="search"
+              placeholder="Search by node ID (comma separated)"
+              className="w-full px-4 py-2 bg-base-100 rounded-md"
+              value={search}
+              onChange={() => {
+                const keyword = (
+                  document.getElementById("search") as HTMLInputElement
+                ).value;
+                setSearch(keyword);
+                localStorage.setItem("search", keyword);
+              }}
+            />
+            <Button
+              hidden={search === ""}
+              onClick={() => {
+                setSearch("");
+                localStorage.removeItem("search");
+              }}
+            >
+              Clear
+            </Button>
+          </div>
 
           <div className="flex flex-row gap-4">
             <div className="flex flex-row text-right items-center gap-2">
