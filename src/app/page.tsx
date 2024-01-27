@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Input, Select, Table } from "react-daisyui";
 import { toast } from "react-toastify";
@@ -71,6 +72,9 @@ type Node = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const search = searchParams.get("q") || "";
   const getStorage = useCallback((key: string) => {
     if (typeof window !== "undefined") {
       return localStorage.getItem(key);
@@ -80,9 +84,6 @@ export default function Home() {
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
-  const [search, setSearch] = useState(
-    (getStorage("search") || "").replace(/\s/g, "")
-  );
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
 
@@ -202,15 +203,13 @@ export default function Home() {
                 const keyword = (
                   document.getElementById("search") as HTMLInputElement
                 ).value;
-                setSearch(keyword.replace(/\s/g, ""));
-                localStorage.setItem("search", keyword);
+                router.push(`/?q=${keyword.replace(/\s/g, "")}`);
               }}
             />
             <Button
-              hidden={(search || getStorage("search")) === ""}
+              hidden={search.replace(/\s/g, "") === ""}
               onClick={() => {
-                setSearch("");
-                localStorage.removeItem("search");
+                router.push("/");
               }}
             >
               Clear
