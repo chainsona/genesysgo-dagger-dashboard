@@ -19,6 +19,15 @@ function formatRewards(rewards: string) {
   })}`;
 }
 
+function ellipsis(str: string, max: number) {
+  if (str.length <= max) {
+    return str;
+  }
+
+  const mid = Math.floor(max / 2);
+  return str.slice(0, mid) + "..." + str.slice(str.length - mid);
+}
+
 function statusHelper(status: string) {
   // top_150
   // queued
@@ -143,8 +152,8 @@ export default function Home() {
   }, [search, nodes, sort]);
 
   return (
-    <main className="flex flex-col w-full text-left overflow-x-auto p-8 gap-4">
-      <div className="w-full flex flex-row space-between pb-4">
+    <main className="flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
+      <div className="w-full flex flex-col sm:flex-row gap-3 space-between pb-4 justify-center sm:items-center">
         <div className="flex-grow text-3xl text-gray-200">
           D.A.G.G.E.R. Testnet2 Dashboard
         </div>
@@ -152,8 +161,8 @@ export default function Home() {
           <div className="text-gray-400 hover:underline">Follow me on 𝕏</div>
         </Link>
       </div>
-      <div className="flex w-full component-preview items-center justify-center gap-2 font-sans">
-        <div className="w-full flex flex-row gap-4">
+      <div className="flex flex-row w-full component-preview items-center justify-center gap-2 font-sans">
+        <div className="w-full flex flex-col md:flex-row gap-4">
           <Input
             id="search"
             placeholder="Search by node ID (comma separated)"
@@ -167,54 +176,58 @@ export default function Home() {
               localStorage.setItem("search", keyword);
             }}
           />
-          <div className="flex flex-row text-right items-center gap-2">
-            <div className="w-28 text-gray-400 text">Refresh (min)</div>
-            <Input
-              id="refresh"
-              placeholder="Refresh interval (minutes)"
-              className="w-20 px-4 py-2 bg-base-100 rounded-md"
-              value={getStorage("refresh") || refresh}
-              type="number"
-              min={1}
-              onChange={() => {
-                try {
-                  const minutes = (
-                    document.getElementById("refresh") as HTMLInputElement
-                  ).value;
-                  parseInt(minutes);
-                  localStorage.setItem("refresh", minutes);
-                  setRefresh(minutes);
-                } catch (e) {
-                  return;
-                }
+          <div className="flex flex-row gap-4">
+            <div className="w-full flex flex-row text-right items-center gap-2">
+              <div className="w-28 text-gray-400 text">Refresh (min)</div>
+              <Input
+                id="refresh"
+                placeholder="Refresh interval (minutes)"
+                className="w-20 px-4 py-2 bg-base-100 rounded-md"
+                value={getStorage("refresh") || refresh}
+                type="number"
+                min={1}
+                onChange={() => {
+                  try {
+                    const minutes = (
+                      document.getElementById("refresh") as HTMLInputElement
+                    ).value;
+                    parseInt(minutes);
+                    localStorage.setItem("refresh", minutes);
+                    setRefresh(minutes);
+                  } catch (e) {
+                    return;
+                  }
+                }}
+              />
+            </div>
+            <Select
+              className="px-4 py-2 bg-base-100 rounded-md"
+              onChange={(event) => {
+                setSort(event.target.value);
+                localStorage.setItem("sort", event.target.value);
               }}
-            />
+              value={sort}
+            >
+              <Select.Option value="rank-desc">
+                Rank (first to last)
+              </Select.Option>
+              <Select.Option value="rank-asc">
+                Rank (last to first)
+              </Select.Option>
+              <Select.Option value="rewards-desc">
+                Rewards (higher to lower)
+              </Select.Option>
+              <Select.Option value="rewards-asc">
+                Rewards (lower to higher)
+              </Select.Option>
+              <Select.Option value="uptime-desc">
+                Uptime (higher to lower)
+              </Select.Option>
+              <Select.Option value="uptime-asc">
+                Uptime (lower to higher)
+              </Select.Option>
+            </Select>
           </div>
-          <Select
-            className="px-4 py-2 bg-base-100 rounded-md"
-            onChange={(event) => {
-              setSort(event.target.value);
-              localStorage.setItem("sort", event.target.value);
-            }}
-            value={sort}
-          >
-            <Select.Option value="rank-desc">
-              Rank (first to last)
-            </Select.Option>
-            <Select.Option value="rank-asc">Rank (last to first)</Select.Option>
-            <Select.Option value="rewards-desc">
-              Rewards (higher to lower)
-            </Select.Option>
-            <Select.Option value="rewards-asc">
-              Rewards (lower to higher)
-            </Select.Option>
-            <Select.Option value="uptime-desc">
-              Uptime (higher to lower)
-            </Select.Option>
-            <Select.Option value="uptime-asc">
-              Uptime (lower to higher)
-            </Select.Option>
-          </Select>
         </div>
       </div>
 
@@ -222,14 +235,14 @@ export default function Home() {
         ⚠️ Ranking Top 150 nodes, queued then the rest by uptime.
       </div>
 
-      <div className="flex border border-base-100 rounded-xl overflow-hidden">
+      <div className="flex border border-base-100 rounded-xl overflow-auto">
         <Table className="w-full">
-          <Table.Head className="h-16 text-center">
+          <Table.Head className="sm:h-16 text-center table-column sm:table-header-group	text-lg text-gray-300">
             <span className="px-4">Rank</span>
             <span className="block text-left">Node ID</span>
             <span className="">Status</span>
-            <span className="">Discord Verified</span>
-            <span className="">Up</span>
+            <span className="">Discord</span>
+            <span className="">Availability</span>
             <span className="">Uptime</span>
             <span className="block pr-4 text-right">Total Rewards</span>
           </Table.Head>
@@ -240,16 +253,21 @@ export default function Home() {
                 key={node.node_id}
                 className={`${backgroundColorHelper(
                   node.status
-                )} h-14 text-center`}
+                )} md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0`}
                 hover={true}
               >
-                <span className="block text-right pr-4">{node.rank}</span>
-                <span className="block text-left">{node.node_id}</span>
+                <span className="block text-right pr-4 text-lg">
+                  #{node.rank}
+                </span>
+                <span className="block text-left">
+                  {ellipsis(node.node_id, 16)}{" "}
+                  <span className="animate-ping inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                </span>
                 <span className="">{statusHelper(node.status)}</span>
                 <span className="block text-center">
-                  {node.is_discord_verified ? "Yes" : "No"}
+                  {node.is_discord_verified ? "Verified" : "Unverified"}
                 </span>
-                <span className="">{node.is_up ? "Yes" : "No"}</span>
+                <span className="">{node.is_up ? "Up" : "Down"}</span>
                 <span className="">{node.uptimeStr}</span>
                 <span className="block pr-4 text-right">
                   {formatRewards(node.total_rewards)}
@@ -259,6 +277,8 @@ export default function Home() {
           </Table.Body>
         </Table>
       </div>
+
+      <div className="flex flex-grow"></div>
     </main>
   );
 }
