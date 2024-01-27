@@ -153,14 +153,25 @@ export default function Home() {
 
   return (
     <main className="flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
-      <div className="w-full flex flex-col sm:flex-row gap-3 space-between pb-4 justify-center sm:items-center">
-        <div className="flex-grow text-3xl text-gray-200">
+      <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
+        <div className="flex-grow text-2xl text-gray-200 text-center">
           D.A.G.G.E.R. Testnet2 Dashboard
         </div>
-        <Link href="https://x.com/chainsona" passHref target="_blank">
-          <div className="text-gray-400 hover:underline">Get updates on 𝕏</div>
-        </Link>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lg">
+          <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
+            <div className="text-gray-400 hover:underline text-center">
+              Official website
+            </div>
+          </Link>
+          <Link href="https://x.com/chainsona" passHref target="_blank">
+            <div className="text-gray-400 hover:underline text-center">
+              Follow me on 𝕏
+            </div>
+          </Link>
+        </div>
       </div>
+
       <div className="flex flex-row w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-col md:flex-row gap-4">
           <Input
@@ -176,9 +187,12 @@ export default function Home() {
               localStorage.setItem("search", keyword);
             }}
           />
+
           <div className="flex flex-row gap-4">
-            <div className="w-full flex flex-row text-right items-center gap-2">
-              <div className="w-28 text-gray-400 text">Refresh (min)</div>
+            <div className="flex flex-row text-right items-center gap-2">
+              <div className="sm:w-28 text-gray-400 text text-center">
+                Refresh (min)
+              </div>
               <Input
                 id="refresh"
                 placeholder="Refresh interval (minutes)"
@@ -200,8 +214,9 @@ export default function Home() {
                 }}
               />
             </div>
+
             <Select
-              className="px-4 py-2 bg-base-100 rounded-md"
+              className="w-full sm:w-64 px-4 py-2 bg-base-100 rounded-md"
               onChange={(event) => {
                 setSort(event.target.value);
                 localStorage.setItem("sort", event.target.value);
@@ -259,7 +274,7 @@ export default function Home() {
                 <span className="block text-right pr-4 text-lg">
                   #{node.rank}
                 </span>
-                <span className="block text-left">
+                <span className="flex text-left items-center">
                   {ellipsis(node.node_id, 16)}{" "}
                   <span className="animate-ping inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                 </span>
