@@ -29,7 +29,38 @@ function formatRewards(rewards: string) {
   })}`;
 }
 
+function statusHelper(status: string) {
+  // top_150
+  // queued
+  // not_eligible
+
+  switch (status) {
+    case "top_150":
+      return "Top 150";
+    case "queued":
+      return "Queued";
+    case "not_eligible":
+      return "Not Eligible";
+    default:
+      return "Unknown";
+  }
+}
+
+function backgroundColorHelper(status: string) {
+  switch (status) {
+    // case "top_150":
+    //   return "bg-green-900";
+    case "queued":
+      return "bg-yellow-900";
+    case "not_eligible":
+      return "bg-red-900";
+    default:
+      return "bg-gray-900";
+  }
+}
+
 type Node = {
+  rank: number;
   node_id: string;
   is_discord_verified: boolean;
   is_up: boolean;
@@ -57,9 +88,22 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) =>
         setNodes(
-          data.nodes.map((node: Node) => {
+          [
+            ...data.nodes
+              .filter((node: Node) => node.status === "top_150")
+              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
+            ...data.nodes
+              .filter((node: Node) => node.status === "queued")
+              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
+            ...data.nodes
+              .filter(
+                (node: Node) => !["top_150", "queued"].includes(node.status)
+              )
+              .sort((a: Node, b: Node) => Number(b.uptime) - Number(a.uptime)),
+          ].map((node: Node, i: number) => {
             return {
               ...node,
+              rank: i + 1,
               uptimeStr: secondsToDhms(parseInt(node.uptime)),
             };
           }) || []
@@ -136,31 +180,42 @@ export default function Home() {
         </div>
       </div>
 
-      <Table>
-        <Table.Head>
-          <span />
-          <span>Node ID</span>
-          <span>Discord Verified</span>
-          <span>Active</span>
-          <span>Uptime</span>
-          <span>Total Rewards</span>
-        </Table.Head>
+      <div className="p-4">
+        Rank Top 150 nodes, queued then the rest by uptime.
+      </div>
 
-        <Table.Body>
-          {filteredNodes.map((node: Node, i: number) => (
-            <Table.Row key={node.node_id}>
-              <span className="block text-right pr-4">{`#${i + 1}`}</span>
-              <span>{node.node_id}</span>
-              <span>{node.is_discord_verified ? "Yes" : "No"}</span>
-              <span>{node.is_up ? "Yes" : "No"}</span>
-              <span>{node.uptimeStr}</span>
-              <span className="text-right">
-                {formatRewards(node.total_rewards)}
-              </span>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      <div className="flex w-full px-4">
+        <Table className="w-full">
+          <Table.Head>
+            <span className="">Rank</span>
+            <span className="">Node ID</span>
+            <span className="">Status</span>
+            <span className="">Discord Verified</span>
+            <span className="">Up</span>
+            <span className="">Uptime</span>
+            <span className="">Total Rewards</span>
+          </Table.Head>
+
+          <Table.Body>
+            {filteredNodes.map((node: Node) => (
+              <Table.Row
+                key={node.node_id}
+                className={`${backgroundColorHelper(node.status)} py-2`}
+              >
+                <span className="block text-right pr-4">{node.rank}</span>
+                <span>{node.node_id}</span>
+                <span>{statusHelper(node.status)}</span>
+                <span>{node.is_discord_verified ? "Yes" : "No"}</span>
+                <span>{node.is_up ? "Yes" : "No"}</span>
+                <span>{node.uptimeStr}</span>
+                <span className="text-right">
+                  {formatRewards(node.total_rewards)}
+                </span>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
     </main>
   );
 }
