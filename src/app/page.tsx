@@ -79,7 +79,9 @@ export default function Home() {
 
   const [nodes, setNodes] = useState<Node[]>([]);
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
-  const [search, setSearch] = useState(getStorage("search") || "");
+  const [search, setSearch] = useState(
+    (getStorage("search") || "").replace(/\s/g, "")
+  );
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
 
@@ -184,7 +186,7 @@ export default function Home() {
                 const keyword = (
                   document.getElementById("search") as HTMLInputElement
                 ).value;
-                setSearch(keyword);
+                setSearch(keyword.replace(/\s/g, ""));
                 localStorage.setItem("search", keyword);
               }}
             />
