@@ -152,7 +152,7 @@ export default function Home() {
   }, [search, nodes, sort]);
 
   return (
-    <main className="flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
+    <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
       <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
         <div className="flex-grow text-2xl text-gray-200 text-center">
           D.A.G.G.E.R. Testnet2 Dashboard
@@ -178,7 +178,7 @@ export default function Home() {
             <Input
               id="search"
               placeholder="Search by node ID (comma separated)"
-              className="w-full px-4 py-2 bg-base-100 rounded-md"
+              className="w-full px-4 py-2 bg-base-100 rounded-md bg-gray-900"
               value={search}
               onChange={() => {
                 const keyword = (
@@ -207,7 +207,7 @@ export default function Home() {
               <Input
                 id="refresh"
                 placeholder="Refresh interval (minutes)"
-                className="w-20 px-4 py-2 bg-base-100 rounded-md"
+                className="w-20 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
                 value={getStorage("refresh") || refresh}
                 type="number"
                 min={1}
@@ -227,7 +227,7 @@ export default function Home() {
             </div>
 
             <Select
-              className="w-full sm:w-64 px-4 py-2 bg-base-100 rounded-md"
+              className="w-full sm:w-64 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
               onChange={(event) => {
                 setSort(event.target.value);
                 localStorage.setItem("sort", event.target.value);
