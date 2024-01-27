@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Input, Select, Table } from "react-daisyui";
 
@@ -154,6 +155,14 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-full text-left overflow-x-auto p-8 gap-4">
+      <div className="w-full flex flex-row space-between pb-4">
+        <div className="flex-grow text-3xl text-gray-200 ">
+          D.A.G.G.E.R. Testnet2 Dashboard
+        </div>
+        <Link href="https://x.com/chainsona" passHref>
+          <div className="text-gray-400 hover:underline">Follow me on 𝕏</div>
+        </Link>
+      </div>
       <div className="flex w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-row gap-4">
           <Input
