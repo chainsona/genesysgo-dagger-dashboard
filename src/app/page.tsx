@@ -199,6 +199,7 @@ export default function Home() {
               <Table.Row
                 key={node.node_id}
                 className={`${backgroundColorHelper(node.status)} py-2`}
+                hover={true}
               >
                 <span className="block text-right pr-4">{node.rank}</span>
                 <span>{node.node_id}</span>
