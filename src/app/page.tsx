@@ -99,6 +99,7 @@ export default function Home() {
         <div className="w-full flex flex-row gap-4">
           <Input
             id="search"
+            placeholder="Search by node ID (comma separated)"
             className="w-full px-4 py-2 bg-base-100 rounded-md"
             value={search}
             onChange={() => {
@@ -112,7 +113,7 @@ export default function Home() {
             }}
           />
           <Select
-            className="w-48 px-4 py-2 bg-base-100 rounded-md"
+            className="px-4 py-2 bg-base-100 rounded-md"
             onChange={(event) => {
               setSort(event.target.value);
               localStorage.setItem("sort", event.target.value);
