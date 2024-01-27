@@ -82,8 +82,9 @@ export default function Home() {
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
   const [search, setSearch] = useState(getStorage("search") || "");
   const [sort, setSort] = useState(getStorage("sort") || "uptime-desc");
+  const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
 
-  useEffect(() => {
+  const fetchNodes = useCallback(() => {
     fetch("https://shdw-rewards-oracle.shdwdrive.com/node-leaderboard")
       .then((res) => res.json())
       .then((data) =>
@@ -110,6 +111,17 @@ export default function Home() {
         )
       );
   }, []);
+
+  useEffect(() => {
+    fetchNodes();
+    const timer = setInterval(() => {
+      fetchNodes();
+    }, parseInt(refresh) * 60 * 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [fetchNodes, refresh]);
 
   useEffect(() => {
     setFilteredNodes(
@@ -147,15 +159,35 @@ export default function Home() {
             className="w-full px-4 py-2 bg-base-100 rounded-md"
             value={search}
             onChange={() => {
-              setSearch(
-                (document.getElementById("search") as HTMLInputElement).value
-              );
-              localStorage.setItem(
-                "search",
-                (document.getElementById("search") as HTMLInputElement).value
-              );
+              const keyword = (
+                document.getElementById("search") as HTMLInputElement
+              ).value;
+              setSearch(keyword);
+              localStorage.setItem("search", keyword);
             }}
           />
+
+          <Input
+            id="refresh"
+            placeholder="Refresh interval (minutes)"
+            className="w-20 px-4 py-2 bg-base-100 rounded-md"
+            value={getStorage("refresh") || refresh}
+            type="number"
+            min={1}
+            onChange={() => {
+              try {
+                const minutes = (
+                  document.getElementById("refresh") as HTMLInputElement
+                ).value;
+                parseInt(minutes);
+                localStorage.setItem("refresh", minutes);
+                setRefresh(minutes);
+              } catch (e) {
+                return;
+              }
+            }}
+          />
+
           <Select
             className="px-4 py-2 bg-base-100 rounded-md"
             onChange={(event) => {
@@ -180,7 +212,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-4">Rank Top 150 nodes, queued then the rest by uptime.</div>
+      <div className="p-4">
+        Rank Top 150 nodes, queued then the rest by uptime.
+      </div>
 
       <div className="flex w-full px-4">
         <Table className="w-full">
