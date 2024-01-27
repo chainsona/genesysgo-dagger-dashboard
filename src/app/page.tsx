@@ -247,10 +247,6 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="text-gray-400 text-sm">
-        ⚠️ Ranking Top 150 nodes, queued then the rest by uptime.
-      </div>
-
       <div className="flex border border-base-100 rounded-xl overflow-auto">
         <Table className="w-full">
           <Table.Head className="sm:h-16 text-center table-column sm:table-header-group	text-lg text-gray-300">
