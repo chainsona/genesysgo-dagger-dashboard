@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -37,11 +37,11 @@ function statusHelper(status: string) {
 
   switch (status) {
     case "top_150":
-      return "Top 150";
+      return "Earning";
     case "queued":
-      return "Queued";
+      return "Waiting";
     case "not_eligible":
-      return "Not Eligible";
+      return "N/A";
     default:
       return "Unknown";
   }
@@ -53,6 +53,8 @@ function backgroundColorHelper(status: string) {
       return "bg-green-950";
     case "queued":
       return "bg-sky-950";
+    case "down":
+      return "bg-gray-800";
     case "not_eligible":
       return "bg-red-900";
     default:
@@ -175,10 +177,10 @@ export default function Home() {
               <svg
                 stroke="currentColor"
                 fill="none"
-                stroke-width="2"
+                strokeWidth="2"
                 viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -291,26 +293,39 @@ export default function Home() {
               <Table.Row
                 key={node.node_id}
                 className={`${backgroundColorHelper(
-                  node.status
-                )} md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
+                  node.is_up ? "up" : "down"
+                )} md:h-12 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
               >
                 <span className="block text-center pr-4 text-lg">
                   #{node.rank}
                 </span>
-                <span className="hidden sm:flex text-left items-center">
-                  {node.node_id}
+                <span className="">
+                  <span className="hidden sm:flex text-left items-center">
+                    {node.node_id}
+                  </span>
+                  <span className="sm:hidden flex text-left items-center">
+                    {ellipsis(node.node_id, 16)}{" "}
+                  </span>
                 </span>
-                <span className="sm:hidden flex text-left items-center">
-                  {ellipsis(node.node_id, 16)}{" "}
+                <span className="">
+                  <span
+                    className={`${backgroundColorHelper(
+                      node.status
+                    )} px-6 py-1 rounded-full uppercase text-xs font-semibold w-64`}
+                  >
+                    {statusHelper(node.status)}
+                  </span>
                 </span>
-                <span className="">{statusHelper(node.status)}</span>
                 <span className="block text-center">
                   {node.is_discord_verified ? "Verified" : "Unverified"}
                 </span>
                 <span className="">{node.is_up ? "Up" : "Down"}</span>
                 <span className="">{node.uptimeStr}</span>
-                <span className="block pr-4 text-right">
-                  {formatRewards(node.total_rewards)}
+                <span className="flex gap-2 px-4  text-right items-center justify-end">
+                  <div className="">{formatRewards(node.total_rewards)}</div>
+                  <div className="">
+                    <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+                  </div>
                 </span>
               </Table.Row>
             ))}
