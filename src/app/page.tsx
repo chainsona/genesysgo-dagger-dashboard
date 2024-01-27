@@ -4,16 +4,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Input, Select, Table } from "react-daisyui";
 
-// {
-//   "node_id": "BQofKZeR1UsU2tx27oexqzC3R3rmF5eaETRbfbEHLuat",
-//   "is_discord_verified": true,
-//   "is_up": true,
-//   "status": "top_150",
-//   "uptime": "1022428506",
-//   "total_rewards": "229596397182"
-//   },
-
-// Convert seconds to days hours minutes
 function secondsToDhms(seconds: number) {
   seconds = Number(seconds) / 1000;
   const d = Math.floor(seconds / (3600 * 24));
@@ -22,7 +12,6 @@ function secondsToDhms(seconds: number) {
   return `${d} days ${h} hours ${m} minutes`;
 }
 
-// format rewards
 function formatRewards(rewards: string) {
   return `${(Number(rewards) / 10 ** 9).toLocaleString("en-US", {
     minimumFractionDigits: 2,
