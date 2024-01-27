@@ -287,9 +287,11 @@ export default function Home() {
                 <span className="block text-center pr-4 text-lg">
                   #{node.rank}
                 </span>
-                <span className="flex text-left items-center">
+                <span className="hidden sm:flex text-left items-center">
+                  {node.node_id}
+                </span>
+                <span className="sm:hidden flex text-left items-center">
                   {ellipsis(node.node_id, 16)}{" "}
-                  <span className="animate-ping inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                 </span>
                 <span className="">{statusHelper(node.status)}</span>
                 <span className="block text-center">
