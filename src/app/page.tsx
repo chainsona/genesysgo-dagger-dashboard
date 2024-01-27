@@ -156,10 +156,10 @@ export default function Home() {
   return (
     <main className="flex flex-col w-full text-left overflow-x-auto p-8 gap-4">
       <div className="w-full flex flex-row space-between pb-4">
-        <div className="flex-grow text-3xl text-gray-200 ">
+        <div className="flex-grow text-3xl text-gray-200">
           D.A.G.G.E.R. Testnet2 Dashboard
         </div>
-        <Link href="https://x.com/chainsona" passHref>
+        <Link href="https://x.com/chainsona" passHref target="_blank">
           <div className="text-gray-400 hover:underline">Follow me on 𝕏</div>
         </Link>
       </div>
@@ -235,30 +235,34 @@ export default function Home() {
 
       <div className="flex border border-base-100 rounded-xl overflow-hidden">
         <Table className="w-full">
-          <Table.Head className="h-12">
+          <Table.Head className="h-16 text-center">
             <span className="px-4">Rank</span>
-            <span className="">Node ID</span>
+            <span className="block text-left">Node ID</span>
             <span className="">Status</span>
             <span className="">Discord Verified</span>
             <span className="">Up</span>
             <span className="">Uptime</span>
-            <span className="">Total Rewards</span>
+            <span className="block pr-4 text-right">Total Rewards</span>
           </Table.Head>
 
           <Table.Body>
             {filteredNodes.map((node: Node) => (
               <Table.Row
                 key={node.node_id}
-                className={`${backgroundColorHelper(node.status)} h-12`}
+                className={`${backgroundColorHelper(
+                  node.status
+                )} h-14 text-center`}
                 hover={true}
               >
                 <span className="block text-right pr-4">{node.rank}</span>
-                <span>{node.node_id}</span>
-                <span>{statusHelper(node.status)}</span>
-                <span>{node.is_discord_verified ? "Yes" : "No"}</span>
-                <span>{node.is_up ? "Yes" : "No"}</span>
-                <span>{node.uptimeStr}</span>
-                <span className="text-right">
+                <span className="block text-left">{node.node_id}</span>
+                <span className="">{statusHelper(node.status)}</span>
+                <span className="block text-center">
+                  {node.is_discord_verified ? "Yes" : "No"}
+                </span>
+                <span className="">{node.is_up ? "Yes" : "No"}</span>
+                <span className="">{node.uptimeStr}</span>
+                <span className="block pr-4 text-right">
                   {formatRewards(node.total_rewards)}
                 </span>
               </Table.Row>
