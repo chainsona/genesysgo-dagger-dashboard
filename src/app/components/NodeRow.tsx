@@ -227,7 +227,7 @@ export default function TableRow(props: TableRowProps) {
         <span
           className={`${backgroundColorHelper(
             status
-          )} px-6 py-1 rounded-full uppercase text-xs font-semibold w-64`}
+          )} px-4 sm:px-6 py-1 sm:py-2 rounded-full uppercase text-xs sm:text-sm font-semibold w-64`}
         >
           {statusHelper(status)}
         </span>
