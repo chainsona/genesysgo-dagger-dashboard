@@ -51,6 +51,9 @@ export default function Home() {
 
   useEffect(() => {
     fetchNodes();
+  }, [fetchNodes]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       fetchNodes();
     }, parseInt(refresh) * 60 * 1000);
