@@ -164,7 +164,7 @@ export default function TableRow(props: TableRowProps) {
       key={id}
       className={`${backgroundColorHelper(is_up ? "up" : "down")} ${
         is_up ? "" : "text-gray-400"
-      } md:h-14 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
+      } md:h-20 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
     >
       <span className="block text-center pr-4 text-lg">#{rank}</span>
 
