@@ -18,9 +18,9 @@ export default function NodeTable(props: NodeTableProps) {
         <Table.Head className="sm:h-16 text-center table-column sm:table-header-group	text-lg text-gray-300">
           <span className="px-4">Rank</span>
           <span className="block text-left">Node ID</span>
+          <span className="">Availability</span>
           <span className="">Status</span>
           <span className="">Discord</span>
-          <span className="">Availability</span>
           <span className="flex flex-col">
             <span className="">Uptime</span>
             <span className="text-xs">Earned</span>
