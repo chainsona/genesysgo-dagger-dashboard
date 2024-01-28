@@ -11,7 +11,6 @@ import NodeSort from "./components/NodeSort";
 import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
-import { getLocalStorage } from "./utils/storage";
 import { secondsToDhms } from "./utils/string";
 
 export default function Home() {
@@ -20,7 +19,10 @@ export default function Home() {
   const search = searchParams.get("q") || "";
 
   const getStorage = useCallback((key: string) => {
-    return getLocalStorage(window, key);
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key);
+    }
+    return null;
   }, []);
 
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -42,8 +44,8 @@ export default function Home() {
           }) || []
         )
       )
-      .catch((e) => {
-        console.error(e);
+      .catch((e: any) => {
+        console.error(JSON.stringify(e));
       });
   }, []);
 

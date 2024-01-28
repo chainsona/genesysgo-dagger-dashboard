@@ -7,7 +7,6 @@ import { Table } from "react-daisyui";
 
 import { formatNumbers, secondsToDhms } from "../utils/string";
 import { toast } from "react-toastify";
-import { setLocalStorage } from "../utils/storage";
 
 function ellipsis(str: string, max: number) {
   if (str.length <= max) {
@@ -88,11 +87,15 @@ export default function TableRow(props: TableRowProps) {
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
 
   const getStorage = useCallback((key: string) => {
+    if (!window) return null;
+
     return localStorage.getItem(key);
   }, []);
 
   const setStorage = useCallback((key: string, value: string) => {
-    setLocalStorage(window, key, value);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(key, value);
+    }
   }, []);
 
   const fetchNodesStats = useCallback(async () => {
@@ -131,8 +134,8 @@ export default function TableRow(props: TableRowProps) {
         if (!asset) return 0;
 
         assetId = asset.id;
-      } catch (e) {
-        console.error(e);
+      } catch (e: any) {
+        console.error(JSON.stringify(e));
       }
     }
 
@@ -143,13 +146,12 @@ export default function TableRow(props: TableRowProps) {
     fetch("https://shdw-rewards-oracle.shdwdrive.com/stats?assetId=" + assetId)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setEligibleUptime(
           parseInt(data?.nodeStats?.total_eligible_uptime) || 0
         );
       })
-      .catch((e) => {
-        console.error(e);
+      .catch((e: any) => {
+        console.error(JSON.stringify(e));
       });
   }, [getStorage, setStorage, setEligibleUptime, id, uptime]);
 

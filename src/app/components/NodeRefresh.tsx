@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "react-daisyui";
-import { getLocalStorage } from "../utils/storage";
 
 type NodeRefreshProps = {
   refresh: string;
@@ -10,6 +9,27 @@ type NodeRefreshProps = {
 
 export default function NodeRefresh(props: NodeRefreshProps) {
   const { refresh, setRefresh } = props;
+
+  const handleChange = (e: any) => {
+    if (typeof window !== "undefined") {
+      try {
+        const minutes = (document.getElementById("refresh") as HTMLInputElement)
+          .value;
+        parseInt(minutes);
+        localStorage.setItem("refresh", minutes);
+        setRefresh(minutes);
+      } catch (err: any) {
+        console.error(JSON.stringify(err));
+        return;
+      }
+    }
+  };
+
+  const getStorage = (key: string) => {
+    if (!window) return null;
+
+    return localStorage.getItem(key);
+  };
 
   return (
     <div className="flex flex-row text-right items-center gap-2">
@@ -20,21 +40,10 @@ export default function NodeRefresh(props: NodeRefreshProps) {
         id="refresh"
         placeholder="Refresh interval (minutes)"
         className="w-20 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
-        value={getLocalStorage(window, "refresh") || refresh}
+        value={refresh}
         type="number"
         min={1}
-        onChange={() => {
-          try {
-            const minutes = (
-              document.getElementById("refresh") as HTMLInputElement
-            ).value;
-            parseInt(minutes);
-            localStorage.setItem("refresh", minutes);
-            setRefresh(minutes);
-          } catch (e) {
-            return;
-          }
-        }}
+        onChange={handleChange}
       />
     </div>
   );
