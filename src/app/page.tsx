@@ -6,19 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Input, Select, Table } from "react-daisyui";
 import { toast } from "react-toastify";
 
-import TableRow from "./components/TableRow";
+import NodeTable from "./components/NodeTable";
+import { Node } from "./types";
 import { secondsToDhms } from "./utils/string";
-
-type Node = {
-  rank: number;
-  node_id: string;
-  is_discord_verified: boolean;
-  is_up: boolean;
-  status: string;
-  uptime: string;
-  uptimeStr: string;
-  total_rewards: string;
-};
 
 export default function Home() {
   const router = useRouter();
@@ -229,38 +219,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex border border-base-100 rounded-xl overflow-auto">
-        <Table className="w-full">
-          <Table.Head className="sm:h-16 text-center table-column sm:table-header-group	text-lg text-gray-300">
-            <span className="px-4">Rank</span>
-            <span className="block text-left">Node ID</span>
-            <span className="">Status</span>
-            <span className="">Discord</span>
-            <span className="">Availability</span>
-            <span className="flex flex-col">
-              <span className="">Uptime</span>
-              <span className="text-xs">Earned</span>
-            </span>
-            <span className="block pr-4 text-right">Total Rewards</span>
-          </Table.Head>
-
-          <Table.Body>
-            {filteredNodes.map((node: Node) => (
-              <TableRow
-                id={node.node_id}
-                is_discord_verified={node.is_discord_verified}
-                is_up={node.is_up}
-                key={node.node_id}
-                rank={node.rank}
-                status={node.status}
-                total_rewards={node.total_rewards}
-                uptime={parseInt(node.uptime)}
-                uptimeStr={node.uptimeStr}
-              />
-            ))}
-          </Table.Body>
-        </Table>
-      </div>
+      <NodeTable nodes={filteredNodes} />
 
       <div className="flex flex-grow"></div>
     </main>
