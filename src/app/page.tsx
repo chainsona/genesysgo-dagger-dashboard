@@ -96,9 +96,11 @@ export default function Home() {
   return (
     <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
       <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
-        <div className="flex-grow text-2xl text-gray-200 text-center">
-          D.A.G.G.E.R. Testnet2 Dashboard
-        </div>
+        <Link href="/">
+          <div className="flex-grow text-2xl text-gray-200 text-center hover:underline">
+            D.A.G.G.E.R. Testnet2 Dashboard
+          </div>
+        </Link>
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lg">
           <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
