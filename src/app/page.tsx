@@ -1,66 +1,13 @@
 "use client";
-import Image from "next/image";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Input, Select, Table } from "react-daisyui";
 import { toast } from "react-toastify";
 
-function secondsToDhms(seconds: number) {
-  seconds = Number(seconds) / 1000;
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  return `${d} days ${h} hours ${m} minutes`;
-}
-
-function formatRewards(rewards: string) {
-  return `${(Number(rewards) / 10 ** 9).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-}
-
-function ellipsis(str: string, max: number) {
-  if (str.length <= max) {
-    return str;
-  }
-
-  const mid = Math.floor(max / 2);
-  return str.slice(0, mid) + "..." + str.slice(str.length - mid);
-}
-
-function statusHelper(status: string) {
-  // top_150
-  // queued
-  // not_eligible
-
-  switch (status) {
-    case "top_150":
-      return "Earning";
-    case "queued":
-      return "Waiting";
-    case "not_eligible":
-      return "N/A";
-    default:
-      return "Unknown";
-  }
-}
-
-function backgroundColorHelper(status: string) {
-  switch (status) {
-    case "top_150":
-      return "bg-green-950";
-    case "queued":
-      return "bg-sky-950";
-    case "down":
-      return "bg-gray-800";
-    case "not_eligible":
-      return "bg-red-900";
-    default:
-      return "bg-gray-950";
-  }
-}
+import TableRow from "./components/TableRow";
+import { secondsToDhms } from "./utils/string";
 
 type Node = {
   rank: number;
@@ -77,6 +24,7 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("q") || "";
+
   const getStorage = useCallback((key: string) => {
     if (typeof window !== "undefined") {
       return localStorage.getItem(key);
@@ -284,50 +232,26 @@ export default function Home() {
             <span className="">Status</span>
             <span className="">Discord</span>
             <span className="">Availability</span>
-            <span className="">Uptime</span>
+            <span className="flex flex-col">
+              <span className="">Uptime</span>
+              <span className="text-xs">Earned</span>
+            </span>
             <span className="block pr-4 text-right">Total Rewards</span>
           </Table.Head>
 
           <Table.Body>
             {filteredNodes.map((node: Node) => (
-              <Table.Row
+              <TableRow
+                id={node.node_id}
+                is_discord_verified={node.is_discord_verified}
+                is_up={node.is_up}
                 key={node.node_id}
-                className={`${backgroundColorHelper(
-                  node.is_up ? "up" : "down"
-                )} md:h-12 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
-              >
-                <span className="block text-center pr-4 text-lg">
-                  #{node.rank}
-                </span>
-                <span className="">
-                  <span className="hidden sm:flex text-left items-center">
-                    {node.node_id}
-                  </span>
-                  <span className="sm:hidden flex text-left items-center">
-                    {ellipsis(node.node_id, 16)}{" "}
-                  </span>
-                </span>
-                <span className="">
-                  <span
-                    className={`${backgroundColorHelper(
-                      node.status
-                    )} px-6 py-1 rounded-full uppercase text-xs font-semibold w-64`}
-                  >
-                    {statusHelper(node.status)}
-                  </span>
-                </span>
-                <span className="block text-center">
-                  {node.is_discord_verified ? "Verified" : "Unverified"}
-                </span>
-                <span className="">{node.is_up ? "Up" : "Down"}</span>
-                <span className="">{node.uptimeStr}</span>
-                <span className="flex gap-2 px-4  text-right items-center justify-end">
-                  <div className="">{formatRewards(node.total_rewards)}</div>
-                  <div className="">
-                    <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
-                  </div>
-                </span>
-              </Table.Row>
+                rank={node.rank}
+                status={node.status}
+                total_rewards={node.total_rewards}
+                uptime={parseInt(node.uptime)}
+                uptimeStr={node.uptimeStr}
+              />
             ))}
           </Table.Body>
         </Table>
