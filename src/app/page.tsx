@@ -50,7 +50,10 @@ export default function Home() {
             };
           }) || []
         )
-      );
+      )
+      .catch((e) => {
+        console.error(e);
+      });
   }, []);
 
   useEffect(() => {

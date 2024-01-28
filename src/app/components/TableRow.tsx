@@ -102,36 +102,40 @@ export default function TableRow(props: TableRowProps) {
 
     let assetId = getStorage(id);
     if (!assetId) {
-      const res = await fetch(
-        "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
+      try {
+        const res = await fetch(
+          "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
 
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            id: "my-id",
-            method: "searchAssets",
-            params: {
-              ownerAddress: id,
-              grouping: [
-                "collection",
-                "5Jh2dkw5gimhPMkGYadWsNW837MgUxUo5wrNoNTwcV2c",
-              ],
-              burnt: false,
-              page: 1,
-              limit: 1000,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
-        }
-      );
-      const data = await res.json();
-      const asset = data?.result?.items[0];
-      if (!asset) return 0;
+            body: JSON.stringify({
+              jsonrpc: "2.0",
+              id: "my-id",
+              method: "searchAssets",
+              params: {
+                ownerAddress: id,
+                grouping: [
+                  "collection",
+                  "5Jh2dkw5gimhPMkGYadWsNW837MgUxUo5wrNoNTwcV2c",
+                ],
+                burnt: false,
+                page: 1,
+                limit: 1000,
+              },
+            }),
+          }
+        );
+        const data = await res.json();
+        const asset = data?.result?.items[0];
+        if (!asset) return 0;
 
-      assetId = asset.id;
+        assetId = asset.id;
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     if (!assetId) return 0;
@@ -145,6 +149,9 @@ export default function TableRow(props: TableRowProps) {
         setEligibleUptime(
           parseInt(data?.nodeStats?.total_eligible_uptime) || 0
         );
+      })
+      .catch((e) => {
+        console.error(e);
       });
   }, [getStorage, setStorage, setEligibleUptime, id, uptime]);
 
