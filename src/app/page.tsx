@@ -6,10 +6,13 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Input, Select, Table } from "react-daisyui";
 import { toast } from "react-toastify";
 
-import NodeTable from "./components/NodeTable";
-import { Node } from "./types";
-import { secondsToDhms } from "./utils/string";
+import NodeRefresh from "./components/NodeRefresh";
 import NodeSort from "./components/NodeSort";
+import NodeTable from "./components/NodeTable";
+
+import { Node } from "./types";
+import { getLocalStorage } from "./utils/storage";
+import { secondsToDhms } from "./utils/string";
 
 export default function Home() {
   const router = useRouter();
@@ -17,10 +20,7 @@ export default function Home() {
   const search = searchParams.get("q") || "";
 
   const getStorage = useCallback((key: string) => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(key);
-    }
-    return null;
+    return getLocalStorage(window, key);
   }, []);
 
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -167,26 +167,7 @@ export default function Home() {
               <div className="sm:w-28 text-gray-400 text text-center">
                 Refresh (min)
               </div>
-              <Input
-                id="refresh"
-                placeholder="Refresh interval (minutes)"
-                className="w-20 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
-                value={getStorage("refresh") || refresh}
-                type="number"
-                min={1}
-                onChange={() => {
-                  try {
-                    const minutes = (
-                      document.getElementById("refresh") as HTMLInputElement
-                    ).value;
-                    parseInt(minutes);
-                    localStorage.setItem("refresh", minutes);
-                    setRefresh(minutes);
-                  } catch (e) {
-                    return;
-                  }
-                }}
-              />
+              <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
             </div>
 
             <NodeSort sort={sort} setSort={setSort} />

@@ -6,6 +6,7 @@ import { Table } from "react-daisyui";
 
 import { formatNumbers, secondsToDhms } from "../utils/string";
 import { toast } from "react-toastify";
+import { setLocalStorage } from "../utils/storage";
 
 function ellipsis(str: string, max: number) {
   if (str.length <= max) {
@@ -86,16 +87,11 @@ export default function TableRow(props: TableRowProps) {
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
 
   const getStorage = useCallback((key: string) => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(key);
-    }
-    return null;
+    return localStorage.getItem(key);
   }, []);
 
   const setStorage = useCallback((key: string, value: string) => {
-    if (typeof window !== "undefined") {
-      return localStorage.setItem(key, value);
-    }
+    setLocalStorage(window, key, value);
   }, []);
 
   const fetchNodesStats = useCallback(async () => {
