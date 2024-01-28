@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import NodeTable from "./components/NodeTable";
 import { Node } from "./types";
 import { secondsToDhms } from "./utils/string";
+import NodeSort from "./components/NodeSort";
 
 export default function Home() {
   const router = useRouter();
@@ -188,33 +189,7 @@ export default function Home() {
               />
             </div>
 
-            <Select
-              className="w-full sm:w-64 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
-              onChange={(event) => {
-                setSort(event.target.value);
-                localStorage.setItem("sort", event.target.value);
-              }}
-              value={sort}
-            >
-              <Select.Option value="rank-desc">
-                Rank (first to last)
-              </Select.Option>
-              <Select.Option value="rank-asc">
-                Rank (last to first)
-              </Select.Option>
-              <Select.Option value="rewards-desc">
-                Rewards (higher to lower)
-              </Select.Option>
-              <Select.Option value="rewards-asc">
-                Rewards (lower to higher)
-              </Select.Option>
-              <Select.Option value="uptime-desc">
-                Uptime (higher to lower)
-              </Select.Option>
-              <Select.Option value="uptime-asc">
-                Uptime (lower to higher)
-              </Select.Option>
-            </Select>
+            <NodeSort sort={sort} setSort={setSort} />
           </div>
         </div>
       </div>
