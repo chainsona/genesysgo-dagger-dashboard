@@ -192,12 +192,14 @@ export default function TableRow(props: TableRowProps) {
           <div className="flex gap-2">
             <span className="text-sm">{secondsToDhms(eligibleUptime)}</span>
 
-            <span
-              className={`${backgroundColorPctHelper(
-                (eligibleUptime / uptime) * 100
-              )} px-2 text-sm rounded-full`}
-            >
-              {formatNumbers((eligibleUptime / uptime) * 100)}%
+            <span className={`flex items-center`}>
+              <span
+                className={`block ${backgroundColorPctHelper(
+                  (eligibleUptime / uptime) * 100
+                )} px-2 text-sm rounded-full`}
+              >
+                {formatNumbers((eligibleUptime / uptime) * 100)}%
+              </span>
             </span>
           </div>
         ) : (
