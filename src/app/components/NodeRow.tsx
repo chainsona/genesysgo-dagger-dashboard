@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
+import { Connection, PublicKey } from "@solana/web3.js";
 
 import { formatNumbers, secondsToDhms } from "../utils/string";
 
@@ -102,6 +104,7 @@ export default function TableRow(props: TableRowProps) {
     uptimeStr,
   } = props;
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
+  const [shdwBalance, setShdwBalance] = useState<number | null>(null);
 
   const getStorage = useCallback((key: string) => {
     if (!window) return null;
@@ -172,9 +175,43 @@ export default function TableRow(props: TableRowProps) {
       });
   }, [getStorage, setStorage, setEligibleUptime, id, uptime]);
 
+  const fetchShdwBalance = useCallback(async () => {
+    try {
+      const connection = new Connection(
+        "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
+        "confirmed"
+      );
+
+      // Get token accounts
+      const tokenAccountsResponse =
+        await connection.getParsedTokenAccountsByOwner(new PublicKey(id), {
+          programId: TOKEN_PROGRAM_ID,
+        });
+      const tokenAccounts = tokenAccountsResponse.value;
+
+      const tokens = tokenAccounts.reduce((acc: any, tokenAccount: any) => {
+        acc[tokenAccount.account.data.parsed.info.mint] = {
+          account: tokenAccount.pubkey,
+          address: tokenAccount.account.data.parsed.info.mint,
+          amount: tokenAccount.account.data.parsed.info.tokenAmount.amount,
+          decimals: tokenAccount.account.data.parsed.info.tokenAmount.decimals,
+        };
+        return acc;
+      }, {});
+
+      const shdwToken = tokens["SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y"];
+      if (!shdwToken) return;
+
+      setShdwBalance(shdwToken.amount / 10 ** shdwToken.decimals);
+    } catch (e: any) {
+      console.error(JSON.stringify(e));
+    }
+  }, [id]);
+
   useEffect(() => {
     fetchNodesStats();
-  }, [fetchNodesStats, uptime]);
+    fetchShdwBalance();
+  }, [fetchNodesStats, fetchShdwBalance, uptime]);
 
   return (
     <Table.Row
@@ -183,8 +220,10 @@ export default function TableRow(props: TableRowProps) {
         is_up ? "" : "text-gray-400"
       } md:h-20 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
     >
+      {/* RANK */}
       <span className="block text-center pr-4 text-lg">#{rank}</span>
 
+      {/* NODE ID */}
       <span className="">
         <span className="hidden sm:flex text-left items-center">
           <Link
@@ -243,10 +282,12 @@ export default function TableRow(props: TableRowProps) {
         </span>
       </span>
 
+      {/* AVAILABILITY */}
       <span className="uppercase text-sm font-semibold">
         {is_up ? "Up" : "Down"}
       </span>
 
+      {/* STATUS */}
       <span className="px-4">
         <span
           className={`${backgroundColorHelper(
@@ -257,6 +298,7 @@ export default function TableRow(props: TableRowProps) {
         </span>
       </span>
 
+      {/* DISCORD */}
       <span className="flex text-center items-center gap-2">
         <div className="sm:hidden">
           <svg
@@ -274,6 +316,15 @@ export default function TableRow(props: TableRowProps) {
         {is_discord_verified ? "Verified" : "Unverified"}
       </span>
 
+      {/* BALANCE */}
+      <span className="flex gap-2 px-4 text-right items-center justify-end">
+        <div className="">{formatNumbers(shdwBalance || 0)}</div>
+        <div className="">
+          <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+        </div>
+      </span>
+
+      {/* UPTIME */}
       <span className="flex flex-col gap-1 items-center justify-center px-4">
         <div className="flex gap-2 items-center">
           <span className="">{secondsToDhms(uptime, true)}</span>
@@ -322,7 +373,8 @@ export default function TableRow(props: TableRowProps) {
         )}
       </span>
 
-      <span className="flex gap-2 px-4  text-right items-center justify-end">
+      {/* TOTAL REWARDS */}
+      <span className="flex gap-2 px-4 text-right items-center justify-end">
         <div className="">
           {formatNumbers(parseInt(total_rewards) / 10 ** 9)}
         </div>

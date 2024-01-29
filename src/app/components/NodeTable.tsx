@@ -21,6 +21,7 @@ export default function NodeTable(props: NodeTableProps) {
           <span className="">Availability</span>
           <span className="">Status</span>
           <span className="">Discord</span>
+          <span className="">Balance</span>
           <span className="flex flex-col">
             <span className="">Uptime</span>
             <span className="text-xs">Earned</span>
