@@ -19,7 +19,7 @@ export default function NodeStats(props: NodeStatsProps) {
   const stats: NodeStat[] = [
     {
       title: "shdwNodes",
-      value: nodes.filter((node: Node) => node.is_up).length,
+      value: nodes.length,
     },
     {
       title: "Waiting shdwNodes",
