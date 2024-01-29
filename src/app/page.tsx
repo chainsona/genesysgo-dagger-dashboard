@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Button, Input, Select, Table } from "react-daisyui";
+import { Button, Input } from "react-daisyui";
 import { toast } from "react-toastify";
 
 import NodeRefresh from "./components/NodeRefresh";
 import NodeSort from "./components/NodeSort";
+import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
@@ -141,6 +142,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <NodeStats nodes={nodes} />
 
       <div className="flex flex-row w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-col md:flex-row gap-4">
