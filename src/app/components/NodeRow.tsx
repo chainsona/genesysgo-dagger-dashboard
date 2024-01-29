@@ -291,11 +291,11 @@ export default function TableRow(props: TableRowProps) {
             <span className={`flex items-center`}>
               <span
                 className={`block ${backgroundColorPctHelper(
-                  (eligibleUptime / uptime) * 100
+                  getNormalizedUptime(eligibleUptime) * 100
                 )} px-2 text-sm rounded-full flex gap-2 items-center`}
-                title="Percentage of time node was eligible for rewards."
+                title="Percentage of uptime node was eligible for rewards during Testnet2."
               >
-                {formatNumbers((eligibleUptime / uptime) * 100)}%
+                {formatNumbers(getNormalizedUptime(eligibleUptime) * 100)}%
               </span>
             </span>
           </div>
