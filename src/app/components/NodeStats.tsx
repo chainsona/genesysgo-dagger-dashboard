@@ -69,7 +69,7 @@ export default function NodeStats(props: NodeStatsProps) {
           <div className="text-gray-400">{stat.title}</div>
           <div className="flex items-end justify-center gap-2">
             <div className="text-4xl font-bold text-center">{stat.value}</div>
-            {stat.valuePct && (
+            {!!stat.valuePct && stat.valuePct !== "NaN" && (
               <div className="text-sm font-bold text-center text-gray-400">
                 {stat.valuePct}%
               </div>
