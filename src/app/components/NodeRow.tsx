@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Table } from "react-daisyui";
@@ -64,7 +65,11 @@ function backgroundColorPctHelper(value: number) {
 }
 
 function getNormalizedUptime(uptime: number) {
-  const testnet2LaunchDate = new Date("2024-01-16T18:00:00.000Z").getTime();
+  // Not using the official launch date because some nodes were launched before
+  // const testnet2LaunchDate = new Date("2024-01-16T18:00:00.000Z").getTime();
+
+  // Using the actual launch date of the testnet from higher uptime
+  const testnet2LaunchDate = 1705289977000;
 
   const diff = Date.now() - testnet2LaunchDate;
   const cappedUptime = uptime > diff ? diff : uptime;
