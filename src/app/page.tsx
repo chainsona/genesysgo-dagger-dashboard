@@ -155,7 +155,13 @@ export default function Home() {
                 const keyword = (
                   document.getElementById("search") as HTMLInputElement
                 ).value;
-                router.push(`/?q=${keyword.replace(/\s/g, "")}`);
+                router.push(
+                  `/${
+                    !!keyword.replace(/\s/g, "")
+                      ? "?q=" + keyword.replace(/\s/g, "")
+                      : ""
+                  }`
+                );
               }}
             />
             <Button
