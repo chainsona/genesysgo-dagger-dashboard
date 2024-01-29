@@ -172,9 +172,6 @@ export default function Home() {
 
           <div className="flex flex-row gap-4">
             <div className="flex flex-row text-right items-center gap-2">
-              <div className="sm:w-28 text-gray-400 text text-center">
-                Refresh (min)
-              </div>
               <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
             </div>
 
