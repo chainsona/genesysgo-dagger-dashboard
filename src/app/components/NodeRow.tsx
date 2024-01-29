@@ -4,9 +4,9 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Table } from "react-daisyui";
+import { toast } from "react-toastify";
 
 import { formatNumbers, secondsToDhms } from "../utils/string";
-import { toast } from "react-toastify";
 
 function ellipsis(str: string, max: number) {
   if (str.length <= max) {
@@ -50,7 +50,9 @@ function backgroundColorHelper(status: string) {
 }
 
 function backgroundColorPctHelper(value: number) {
-  if (value >= 90) {
+  if (value >= 95) {
+    return "bg-purple-700";
+  } else if (value >= 90) {
     return "bg-green-700";
   } else if (value >= 75) {
     return "bg-orange-700";
@@ -59,6 +61,16 @@ function backgroundColorPctHelper(value: number) {
   } else {
     return "bg-red-900";
   }
+}
+
+function getNormalizedUptime(uptime: number) {
+  const testnet2LaunchDate = new Date("2024-01-16T18:00:00.000Z").getTime();
+
+  const diff = Date.now() - testnet2LaunchDate;
+  const cappedUptime = uptime > diff ? diff : uptime;
+  const relativeUptime = cappedUptime / diff;
+
+  return relativeUptime;
 }
 
 type TableRowProps = {
@@ -251,16 +263,37 @@ export default function TableRow(props: TableRowProps) {
       </span>
 
       <span className="flex flex-col gap-1 items-center justify-center px-4">
-        <span className="">{secondsToDhms(uptime, true)}</span>
+        <div className="flex gap-2 items-center">
+          <span className="">{secondsToDhms(uptime, true)}</span>
+          <span
+            className={`block ${backgroundColorPctHelper(
+              getNormalizedUptime(uptime) * 100
+            )} px-2 text-sm rounded-full flex gap-2 items-center`}
+          >
+            {uptime / (Date.now() - 1705424400000) >= 0.95 ? (
+              <div
+                className=""
+                title="Node qualifies for additional rewards for uptime >=2,096 hours (approx. 95% of Testnet2)."
+              >
+                <Image src="/shdw.png" alt="SHDW" height={12} width={12} />
+              </div>
+            ) : (
+              ""
+            )}
+            {formatNumbers(getNormalizedUptime(uptime) * 100)}%{" "}
+          </span>
+        </div>
+
         {eligibleUptime !== null ? (
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <span className="text-sm">{secondsToDhms(eligibleUptime)}</span>
 
             <span className={`flex items-center`}>
               <span
                 className={`block ${backgroundColorPctHelper(
                   (eligibleUptime / uptime) * 100
-                )} px-2 text-sm rounded-full`}
+                )} px-2 text-sm rounded-full flex gap-2 items-center`}
+                title="Percentage of time node was eligible for rewards."
               >
                 {formatNumbers((eligibleUptime / uptime) * 100)}%
               </span>
