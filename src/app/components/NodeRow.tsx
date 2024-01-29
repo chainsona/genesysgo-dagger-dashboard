@@ -187,7 +187,14 @@ export default function TableRow(props: TableRowProps) {
 
       <span className="">
         <span className="hidden sm:flex text-left items-center">
-          {id}
+          <Link
+            className="hover:underline"
+            href={`https://solana.fm/account/${id}`}
+            passHref
+            target="_blank"
+          >
+            {id}
+          </Link>
           <CopyToClipboard text={id}>
             <div className="pl-2 hover: cursor-pointer">
               <svg
