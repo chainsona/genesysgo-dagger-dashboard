@@ -3,6 +3,12 @@
 import { Node } from "../types";
 import { formatNumbers } from "../utils/string";
 
+type NodeStat = {
+  title: string;
+  value: string | number;
+  valuePct?: string;
+};
+
 type NodeStatsProps = {
   nodes: Node[];
 };
@@ -10,7 +16,7 @@ type NodeStatsProps = {
 export default function NodeStats(props: NodeStatsProps) {
   const { nodes } = props;
 
-  const stats = [
+  const stats: NodeStat[] = [
     {
       title: "shdwNodes",
       value: nodes.filter((node: Node) => node.is_up).length,
@@ -18,15 +24,28 @@ export default function NodeStats(props: NodeStatsProps) {
     {
       title: "Waiting shdwNodes",
       value: nodes.filter((node: Node) => node.status === "queued").length,
+      valuePct: formatNumbers(
+        (nodes.filter((node: Node) => node.status === "queued").length /
+          nodes.length) *
+          100
+      ),
     },
     {
       title: "Offline shdwNodes",
       value: nodes.filter((node: Node) => !node.is_up).length,
+      valuePct: formatNumbers(
+        (nodes.filter((node: Node) => !node.is_up).length / nodes.length) * 100
+      ),
     },
     {
       title: "Earned Rewards",
       value: nodes.filter((node: Node) => parseInt(node.total_rewards) > 0)
         .length,
+      valuePct: formatNumbers(
+        (nodes.filter((node: Node) => parseInt(node.total_rewards) > 0).length /
+          nodes.length) *
+          100
+      ),
     },
     {
       title: "Distributed Rewards",
@@ -41,14 +60,21 @@ export default function NodeStats(props: NodeStatsProps) {
   ];
 
   return (
-    <div className="flex flex-col sm:flex-row gap-8 justisfy-center">
+    <div className="flex flex-col sm:flex-row gap-8 justisfy-center overflow-hidden">
       {stats.map((stat, i) => (
         <div
-          className="flex flex-col gap-4 p-4 bg-gray-950 rounded-xl w-full"
+          className="flex flex-col justify-between gap-4 p-4 bg-gray-950 rounded-xl w-full"
           key={i}
         >
           <div className="text-gray-400">{stat.title}</div>
-          <div className="text-4xl font-bold text-center">{stat.value}</div>
+          <div className="flex items-end justify-center gap-2">
+            <div className="text-4xl font-bold text-center">{stat.value}</div>
+            {stat.valuePct && (
+              <div className="text-sm font-bold text-center text-gray-400">
+                {stat.valuePct}%
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
