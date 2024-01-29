@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Input } from "react-daisyui";
 import { toast } from "react-toastify";
 
@@ -64,34 +64,32 @@ export default function Home() {
     };
   }, [fetchNodes, refresh]);
 
-  useEffect(() => {
-    setFilteredNodes(
-      nodes
-        .filter(
-          (node: Node) =>
-            search === "" ||
-            node.node_id.toLowerCase().includes(search.toLowerCase()) ||
-            search.toLowerCase().split(",").includes(node.node_id.toLowerCase())
-        )
-        .sort((a: Node, b: Node) => {
-          switch (sort) {
-            case "rank-desc":
-              return Number(a.rank) - Number(b.rank);
-            case "rewards-asc":
-              return Number(a.total_rewards) - Number(b.total_rewards);
-            case "rewards-desc":
-              return Number(b.total_rewards) - Number(a.total_rewards);
-            case "uptime-desc":
-              return Number(b.uptime) - Number(a.uptime);
-            case "uptime-asc":
-              return Number(a.uptime) - Number(b.uptime);
-            default:
-            case "rank-asc":
-              return Number(b.rank) - Number(a.rank);
-          }
-        })
-    );
-  }, [search, nodes, sort]);
+  const visibleNodes = useMemo(() => {
+    return nodes
+      .filter(
+        (node: Node) =>
+          search === "" ||
+          node.node_id.toLowerCase().includes(search.toLowerCase()) ||
+          search.toLowerCase().split(",").includes(node.node_id.toLowerCase())
+      )
+      .sort((a: Node, b: Node) => {
+        switch (sort) {
+          case "rank-desc":
+            return Number(a.rank) - Number(b.rank);
+          case "rewards-asc":
+            return Number(a.total_rewards) - Number(b.total_rewards);
+          case "rewards-desc":
+            return Number(b.total_rewards) - Number(a.total_rewards);
+          case "uptime-desc":
+            return Number(b.uptime) - Number(a.uptime);
+          case "uptime-asc":
+            return Number(a.uptime) - Number(b.uptime);
+          default:
+          case "rank-asc":
+            return Number(b.rank) - Number(a.rank);
+        }
+      });
+  }, [nodes, search, sort]);
 
   return (
     <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
@@ -180,7 +178,7 @@ export default function Home() {
         </div>
       </div>
 
-      <NodeTable nodes={filteredNodes} />
+      <NodeTable nodes={visibleNodes} />
 
       <div className="flex flex-grow"></div>
     </main>
