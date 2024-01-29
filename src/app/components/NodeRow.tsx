@@ -270,13 +270,19 @@ export default function TableRow(props: TableRowProps) {
               getNormalizedUptime(uptime) * 100
             )} px-2 text-sm rounded-full flex gap-2 items-center`}
           >
-            {uptime / (Date.now() - 1705424400000) >= 0.95 ? (
-              <div
-                className=""
-                title="Node qualifies for additional rewards for uptime >=2,096 hours (approx. 95% of Testnet2)."
+            {getNormalizedUptime(uptime) >= 0.95 ? (
+              <Link
+                href="https://docs.shdwdrive.com/token/rewards#operatorss"
+                passHref
+                target="_blank"
               >
-                <Image src="/shdw.png" alt="SHDW" height={12} width={12} />
-              </div>
+                <div
+                  className=""
+                  title="Node qualifies for additional rewards for uptime >=2,096 hours (approx. 95% of Testnet2)."
+                >
+                  <Image src="/shdw.png" alt="SHDW" height={12} width={12} />
+                </div>
+              </Link>
             ) : (
               ""
             )}
