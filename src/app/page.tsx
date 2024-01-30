@@ -27,6 +27,7 @@ export default function Home() {
   }, []);
 
   const [nodes, setNodes] = useState<Node[]>([]);
+  const [nodesInfo, setNodesInfo] = useState<any>({});
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
@@ -50,19 +51,41 @@ export default function Home() {
       });
   }, []);
 
+  const fetchNodesInfo = useCallback(() => {
+    fetch("/api/nodes")
+      .then((res) => res.json())
+      .then((data) => {
+        setNodesInfo(
+          data.data.reduce((acc: any, node: any) => {
+            acc[node.node_id] = node;
+            return acc;
+          }) || []
+        );
+      })
+      .catch((e: any) => {
+        console.error(JSON.stringify(e));
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log("nodesInfo", nodesInfo);
+  }, [nodesInfo]);
+
   useEffect(() => {
     fetchNodes();
-  }, [fetchNodes]);
+    fetchNodesInfo();
+  }, [fetchNodes, fetchNodesInfo]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       fetchNodes();
+      fetchNodesInfo();
     }, parseInt(refresh) * 60 * 1000);
 
     return () => {
       clearInterval(timer);
     };
-  }, [fetchNodes, refresh]);
+  }, [fetchNodes, fetchNodesInfo, refresh]);
 
   const visibleNodes = useMemo(() => {
     return nodes
@@ -184,7 +207,7 @@ export default function Home() {
         </div>
       </div>
 
-      <NodeTable nodes={visibleNodes} />
+      <NodeTable nodes={visibleNodes} nodesInfo={nodesInfo} />
 
       <div className="flex flex-grow"></div>
     </main>

@@ -9,4 +9,17 @@ type Node = {
   total_rewards: string;
 };
 
-export type { Node };
+type NodeInfo = {
+  node_id: string;
+  cpu: number;
+  ram: number;
+  storage: number;
+  cpu_type: string;
+  last_updated: string;
+  wield_version: string;
+  lat: number;
+  lon: number;
+  ip_addr: string;
+};
+
+export type { Node, NodeInfo };

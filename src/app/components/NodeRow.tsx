@@ -9,6 +9,7 @@ import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
 import { Connection, PublicKey } from "@solana/web3.js";
 
+import { NodeInfo } from "../types";
 import { formatNumbers, secondsToDhms } from "../utils/string";
 
 function ellipsis(str: string, max: number) {
@@ -90,6 +91,7 @@ type TableRowProps = {
   total_rewards: string;
   uptime: number;
   uptimeStr: string;
+  nodeConfig?: any;
 };
 
 export default function TableRow(props: TableRowProps) {
@@ -103,6 +105,7 @@ export default function TableRow(props: TableRowProps) {
     uptime,
     uptimeStr,
   } = props;
+  const nodeConfig: NodeInfo = props.nodeConfig || undefined;
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
   const [shdwBalance, setShdwBalance] = useState<number | null>(null);
 
@@ -224,45 +227,68 @@ export default function TableRow(props: TableRowProps) {
       <span className="block text-center pr-4 text-lg">#{rank}</span>
 
       {/* NODE ID */}
-      <span className="">
-        <span className="hidden sm:flex text-left items-center">
-          <Link
-            className="hover:underline"
-            href={`https://solana.fm/account/${id}`}
-            passHref
-            target="_blank"
-          >
-            {id}
-          </Link>
-          <CopyToClipboard text={id}>
-            <div className="pl-2 hover: cursor-pointer">
-              <svg
-                stroke="currentColor"
-                fill="none"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </div>
-          </CopyToClipboard>
-        </span>
-        <span className="sm:hidden flex text-left items-center">
-          {ellipsis(id, 16)}{" "}
-          <CopyToClipboard text={id}>
-            <div
-              className="pl-2 hover: cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText(id);
-                toast("Copied to clipboard!");
-              }}
+      <span className="flex flex-col gap-1 items-center">
+        <div className="items-center">
+          <span className="hidden sm:flex text-left items-center">
+            <Link
+              className="hover:underline"
+              href={`https://solana.fm/account/${id}`}
+              passHref
+              target="_blank"
             >
+              {id}
+            </Link>
+            <CopyToClipboard text={id}>
+              <div className="pl-2 hover: cursor-pointer">
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </div>
+            </CopyToClipboard>
+          </span>
+          <span className="sm:hidden flex text-left items-center">
+            {ellipsis(id, 16)}{" "}
+            <CopyToClipboard text={id}>
+              <div
+                className="pl-2 hover: cursor-pointer"
+                onClick={() => {
+                  navigator.clipboard.writeText(id);
+                  toast("Copied to clipboard!");
+                }}
+              >
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </div>
+            </CopyToClipboard>
+          </span>
+        </div>
+        {nodeConfig && (
+          <div className="flex flex-col 2xl:flex-row gap-1 items-center text-gray-300">
+            {/* CPU */}
+            <div className="flex gap-1 items-center">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -274,12 +300,99 @@ export default function TableRow(props: TableRowProps) {
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <line x1="9" y1="1" x2="9" y2="4"></line>
+                <line x1="15" y1="1" x2="15" y2="4"></line>
+                <line x1="9" y1="20" x2="9" y2="23"></line>
+                <line x1="15" y1="20" x2="15" y2="23"></line>
+                <line x1="20" y1="9" x2="23" y2="9"></line>
+                <line x1="20" y1="14" x2="23" y2="14"></line>
+                <line x1="1" y1="9" x2="4" y2="9"></line>
+                <line x1="1" y1="14" x2="4" y2="14"></line>
               </svg>
+              <div className="text-sm font-semibold">{nodeConfig.cpu_type}</div>
+              <div className="text-sm font-semibold">
+                {nodeConfig.cpu} Cores
+              </div>
             </div>
-          </CopyToClipboard>
-        </span>
+
+            <div className="flex gap-1 items-center">
+              {/* RAM */}
+              <div className="flex gap-1 items-center">
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M6 19v-3"></path>
+                  <path d="M10 19v-3"></path>
+                  <path d="M14 19v-3"></path>
+                  <path d="M18 19v-3"></path>
+                  <path d="M8 11V9"></path>
+                  <path d="M16 11V9"></path>
+                  <path d="M12 11V9"></path>
+                  <path d="M2 15h20"></path>
+                  <path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1.1a2 2 0 0 0 0 3.837V17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5.1a2 2 0 0 0 0-3.837Z"></path>
+                </svg>
+                <div className="text-sm font-semibold">
+                  {Math.floor(nodeConfig.ram / 1000000)}GB
+                </div>
+              </div>
+
+              {/* DISK */}
+              <div className="flex gap-1 items-center">
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+                <div className="text-sm font-semibold">
+                  {Math.floor(nodeConfig.storage / 1000000)}GB
+                </div>
+              </div>
+
+              {/* WIELD */}
+              <div className="flex gap-1 items-center">
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"></path>
+                  <path d="M6 8h.01"></path>
+                  <path d="M9 8h.01"></path>
+                </svg>
+                <div className="text-sm font-semibold">
+                  {nodeConfig.wield_version}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </span>
 
       {/* AVAILABILITY */}

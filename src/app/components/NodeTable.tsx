@@ -7,10 +7,11 @@ import { Node } from "../types";
 
 type NodeTableProps = {
   nodes: Node[];
+  nodesInfo?: any;
 };
 
 export default function NodeTable(props: NodeTableProps) {
-  const { nodes } = props;
+  const { nodes, nodesInfo } = props;
 
   return (
     <div className="flex border border-base-100 rounded-xl overflow-auto">
@@ -41,6 +42,7 @@ export default function NodeTable(props: NodeTableProps) {
               total_rewards={node.total_rewards}
               uptime={parseInt(node.uptime)}
               uptimeStr={node.uptimeStr}
+              nodeConfig={nodesInfo[node.node_id]}
             />
           ))}
         </Table.Body>
