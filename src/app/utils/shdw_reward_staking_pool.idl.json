@@ -1,0 +1,1428 @@
+{
+  "version": "0.1.0",
+  "name": "shdw_reward_staking_pool",
+  "instructions": [
+    {
+      "name": "initializeGlobalConfig",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "globalConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateGlobalConfig",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "globalConfig",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "mode",
+          "type": "u8"
+        },
+        {
+          "name": "value",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "initializeShdwPool",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initializeReward",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardTreasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewardMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addRewards",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewardTokenAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "rewardIndex",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "updateShdwPoolConfig",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "mode",
+          "type": "u16"
+        },
+        {
+          "name": "data",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "initializeUser",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transferOwnership",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "newOwner",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "refreshShdwPool",
+      "accounts": [
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "stake",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "harvestReward",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userRewardAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardsVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardsTreasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "rewardIndex",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "unstake",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "stakeSharesScaled",
+          "type": "u128"
+        }
+      ]
+    },
+    {
+      "name": "refreshUserState",
+      "accounts": [
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdrawUnstakedDeposits",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdrawTreasury",
+      "accounts": [
+        {
+          "name": "globalAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "globalConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rewardTreasuryVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasuryVaultAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawDestinationTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "depositToShdwPoolVault",
+      "accounts": [
+        {
+          "name": "depositor",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositorAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdrawFromShdwPoolVault",
+      "accounts": [
+        {
+          "name": "withdrawAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "shdwPoolVaultsAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "updateShdwPoolAdmin",
+      "accounts": [
+        {
+          "name": "pendingShdwPoolAdmin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "shdwPoolState",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateGlobalConfigAdmin",
+      "accounts": [
+        {
+          "name": "pendingGlobalAdmin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "globalConfig",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "globalConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "globalAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "treasuryFeeBps",
+            "type": "u64"
+          },
+          {
+            "name": "treasuryVaultsAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "treasuryVaultsAuthorityBump",
+            "type": "u64"
+          },
+          {
+            "name": "pendingGlobalAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "padding1",
+            "type": {
+              "array": ["u128", 126]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "shdwPoolState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "globalAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "globalConfig",
+            "type": "publicKey"
+          },
+          {
+            "name": "token",
+            "type": {
+              "defined": "TokenInfo"
+            }
+          },
+          {
+            "name": "rewardInfos",
+            "type": {
+              "array": [
+                {
+                  "defined": "RewardInfo"
+                },
+                10
+              ]
+            }
+          },
+          {
+            "name": "numRewardTokens",
+            "type": "u64"
+          },
+          {
+            "name": "numUsers",
+            "type": "u64"
+          },
+          {
+            "name": "totalStakedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "shdwPoolVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "shdwPoolVaultsAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "shdwPoolVaultsAuthorityBump",
+            "type": "u64"
+          },
+          {
+            "name": "delegateAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "timeUnit",
+            "type": "u8"
+          },
+          {
+            "name": "padding0",
+            "type": {
+              "array": ["u8", 7]
+            }
+          },
+          {
+            "name": "withdrawAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "depositWarmupPeriod",
+            "type": "u32"
+          },
+          {
+            "name": "withdrawalCooldownPeriod",
+            "type": "u32"
+          },
+          {
+            "name": "totalActiveStakeScaled",
+            "type": "u128"
+          },
+          {
+            "name": "totalPendingStakeScaled",
+            "type": "u128"
+          },
+          {
+            "name": "totalPendingAmount",
+            "type": "u64"
+          },
+          {
+            "name": "slashedAmountCurrent",
+            "type": "u64"
+          },
+          {
+            "name": "slashedAmountCumulative",
+            "type": "u64"
+          },
+          {
+            "name": "slashedAmountSpillAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "lockingMode",
+            "type": "u64"
+          },
+          {
+            "name": "lockingStartTimestamp",
+            "type": "u64"
+          },
+          {
+            "name": "lockingDuration",
+            "type": "u64"
+          },
+          {
+            "name": "lockingEarlyWithdrawalPenaltyBps",
+            "type": "u64"
+          },
+          {
+            "name": "depositCapAmount",
+            "type": "u64"
+          },
+          {
+            "name": "scopeOraclePriceId",
+            "type": "u64"
+          },
+          {
+            "name": "scopeOracleMaxAge",
+            "type": "u64"
+          },
+          {
+            "name": "pendingShdwPoolAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": ["u64", 90]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "userState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "userId",
+            "type": "u64"
+          },
+          {
+            "name": "shdwPoolState",
+            "type": "publicKey"
+          },
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "legacyStake",
+            "type": "u64"
+          },
+          {
+            "name": "rewardsTallyScaled",
+            "type": {
+              "array": ["u128", 10]
+            }
+          },
+          {
+            "name": "rewardsIssuedUnclaimed",
+            "type": {
+              "array": ["u64", 10]
+            }
+          },
+          {
+            "name": "lastClaimTs",
+            "type": {
+              "array": ["u64", 10]
+            }
+          },
+          {
+            "name": "activeStakeScaled",
+            "type": "u128"
+          },
+          {
+            "name": "pendingDepositStakeScaled",
+            "type": "u128"
+          },
+          {
+            "name": "pendingDepositStakeTs",
+            "type": "u64"
+          },
+          {
+            "name": "pendingWithdrawalUnstakeScaled",
+            "type": "u128"
+          },
+          {
+            "name": "pendingWithdrawalUnstakeTs",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u64"
+          },
+          {
+            "name": "delegatee",
+            "type": "publicKey"
+          },
+          {
+            "name": "lastStakeTs",
+            "type": "u64"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": ["u64", 50]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "RewardScheduleCurve",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "points",
+            "type": {
+              "array": [
+                {
+                  "defined": "RewardPerTimeUnitPoint"
+                },
+                20
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "RewardPerTimeUnitPoint",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tsStart",
+            "type": "u64"
+          },
+          {
+            "name": "rewardPerTimeUnit",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RewardInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "token",
+            "type": {
+              "defined": "TokenInfo"
+            }
+          },
+          {
+            "name": "rewardsVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "rewardsAvailable",
+            "type": "u64"
+          },
+          {
+            "name": "rewardScheduleCurve",
+            "type": {
+              "defined": "RewardScheduleCurve"
+            }
+          },
+          {
+            "name": "minClaimDurationSeconds",
+            "type": "u64"
+          },
+          {
+            "name": "lastIssuanceTs",
+            "type": "u64"
+          },
+          {
+            "name": "rewardsIssuedUnclaimed",
+            "type": "u64"
+          },
+          {
+            "name": "rewardsIssuedCumulative",
+            "type": "u64"
+          },
+          {
+            "name": "rewardPerShareScaled",
+            "type": "u128"
+          },
+          {
+            "name": "placeholder0",
+            "type": "u64"
+          },
+          {
+            "name": "rewardType",
+            "type": "u8"
+          },
+          {
+            "name": "rewardsPerSecondDecimals",
+            "type": "u8"
+          },
+          {
+            "name": "padding0",
+            "type": {
+              "array": ["u8", 6]
+            }
+          },
+          {
+            "name": "padding1",
+            "type": {
+              "array": ["u64", 20]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "decimals",
+            "type": "u64"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": ["u64", 10]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalConfigOption",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "SetPendingGlobalAdmin"
+          },
+          {
+            "name": "SetTreasuryFeeBps"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ShdwPoolConfigOption",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "UpdateRewardRps"
+          },
+          {
+            "name": "UpdateRewardMinClaimDuration"
+          },
+          {
+            "name": "WithdrawAuthority"
+          },
+          {
+            "name": "DepositWarmupPeriod"
+          },
+          {
+            "name": "WithdrawCooldownPeriod"
+          },
+          {
+            "name": "RewardType"
+          },
+          {
+            "name": "RpsDecimals"
+          },
+          {
+            "name": "LockingMode"
+          },
+          {
+            "name": "LockingStartTimestamp"
+          },
+          {
+            "name": "LockingDuration"
+          },
+          {
+            "name": "LockingEarlyWithdrawalPenaltyBps"
+          },
+          {
+            "name": "DepositCapAmount"
+          },
+          {
+            "name": "SlashedAmountSpillAddress"
+          },
+          {
+            "name": "ScopeOraclePriceId"
+          },
+          {
+            "name": "ScopeOracleMaxAge"
+          },
+          {
+            "name": "UpdateRewardScheduleCurvePoint"
+          },
+          {
+            "name": "UpdatePendingShdwPoolAdmin"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TimeUnit",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Seconds"
+          },
+          {
+            "name": "Slots"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RewardType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Proportional"
+          },
+          {
+            "name": "Constant"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LockingMode",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "Continuous"
+          },
+          {
+            "name": "WithExpiry"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "StakeZero",
+      "msg": "Cannot stake 0 amount"
+    },
+    {
+      "code": 6001,
+      "name": "UnstakeZero",
+      "msg": "Cannot unstake 0 amount"
+    },
+    {
+      "code": 6002,
+      "name": "NothingToUnstake",
+      "msg": "Nothing to unstake"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidUnstakeAmount",
+      "msg": "InvalidUnstakeAmount"
+    },
+    {
+      "code": 6004,
+      "name": "NoRewardToHarvest",
+      "msg": "No reward to harvest"
+    },
+    {
+      "code": 6005,
+      "name": "NoRewardInList",
+      "msg": "Reward not present in reward list"
+    },
+    {
+      "code": 6006,
+      "name": "RewardAlreadyInitialized",
+      "msg": "Reward already initialized"
+    },
+    {
+      "code": 6007,
+      "name": "MaxRewardNumberReached",
+      "msg": "Max number of reward tokens reached"
+    },
+    {
+      "code": 6008,
+      "name": "RewardDoesNotExist",
+      "msg": "Reward does not exist"
+    },
+    {
+      "code": 6009,
+      "name": "WrongRewardVaultAccount",
+      "msg": "Reward vault exists but the account is wrong"
+    },
+    {
+      "code": 6010,
+      "name": "RewardVaultMismatch",
+      "msg": "Reward vault pubkey does not match staking pool vault"
+    },
+    {
+      "code": 6011,
+      "name": "RewardVaultAuthorityMismatch",
+      "msg": "Reward vault authority pubkey does not match staking pool vault"
+    },
+    {
+      "code": 6012,
+      "name": "NothingStaked",
+      "msg": "Nothing staked, cannot collect any rewards"
+    },
+    {
+      "code": 6013,
+      "name": "IntegerOverflow",
+      "msg": "Integer overflow"
+    },
+    {
+      "code": 6014,
+      "name": "ConversionFailure",
+      "msg": "Conversion failure"
+    },
+    {
+      "code": 6015,
+      "name": "UnexpectedAccount",
+      "msg": "Unexpected account in instruction"
+    },
+    {
+      "code": 6016,
+      "name": "OperationForbidden",
+      "msg": "Operation forbidden"
+    },
+    {
+      "code": 6017,
+      "name": "MathOverflow",
+      "msg": "Mathematical operation with overflow"
+    },
+    {
+      "code": 6018,
+      "name": "MinClaimDurationNotReached",
+      "msg": "Minimum claim duration has not been reached"
+    },
+    {
+      "code": 6019,
+      "name": "RewardsVaultHasDelegate",
+      "msg": "Reward vault has a delegate"
+    },
+    {
+      "code": 6020,
+      "name": "RewardsVaultHasCloseAuthority",
+      "msg": "Reward vault has a close authority"
+    },
+    {
+      "code": 6021,
+      "name": "ShdwPoolVaultHasDelegate",
+      "msg": "ShdwPool vault has a delegate"
+    },
+    {
+      "code": 6022,
+      "name": "ShdwPoolVaultHasCloseAuthority",
+      "msg": "ShdwPool vault has a close authority"
+    },
+    {
+      "code": 6023,
+      "name": "RewardsTreasuryVaultHasDelegate",
+      "msg": "Reward vault has a delegate"
+    },
+    {
+      "code": 6024,
+      "name": "RewardsTreasuryVaultHasCloseAuthority",
+      "msg": "Reward vault has a close authority"
+    },
+    {
+      "code": 6025,
+      "name": "UserAtaRewardVaultMintMissmatch",
+      "msg": "User ata and reward vault have different mints"
+    },
+    {
+      "code": 6026,
+      "name": "UserAtaShdwPoolTokenMintMissmatch",
+      "msg": "User ata and shdw_pool token have different mints"
+    },
+    {
+      "code": 6027,
+      "name": "TokenShdwPoolTokenMintMissmatch",
+      "msg": "Token mint and shdw_pool token have different mints"
+    },
+    {
+      "code": 6028,
+      "name": "RewardAtaRewardMintMissmatch",
+      "msg": "Reward ata mint is different than reward mint"
+    },
+    {
+      "code": 6029,
+      "name": "RewardAtaOwnerNotShdwPoolAdmin",
+      "msg": "Reward ata owner is different than shdw_pool admin"
+    },
+    {
+      "code": 6030,
+      "name": "InvalidGlobalConfigMode",
+      "msg": "Mode to update global_config is invalid"
+    },
+    {
+      "code": 6031,
+      "name": "RewardIndexOutOfRange",
+      "msg": "Reward Index is higher than number of rewards"
+    },
+    {
+      "code": 6032,
+      "name": "NothingToWithdraw",
+      "msg": "No tokens available to withdraw"
+    },
+    {
+      "code": 6033,
+      "name": "UserDelegatedShdwPoolNonDelegatedMissmatch",
+      "msg": "user, user_ref, authority and payer must match for non-delegated shdw_pool"
+    },
+    {
+      "code": 6034,
+      "name": "AuthorityShdwPoolDelegateMissmatch",
+      "msg": "Authority must match shdw_pool delegate authority"
+    },
+    {
+      "code": 6035,
+      "name": "ShdwPoolNotDelegated",
+      "msg": "ShdwPool not delegated, can not set stake"
+    },
+    {
+      "code": 6036,
+      "name": "ShdwPoolDelegated",
+      "msg": "Operation not allowed for delegated shdw_pool"
+    },
+    {
+      "code": 6037,
+      "name": "UnstakeNotElapsed",
+      "msg": "Unstake lockup period is not elapsed. Deposit is locked until end of unstake period"
+    },
+    {
+      "code": 6038,
+      "name": "PendingWithdrawalNotWithdrawnYet",
+      "msg": "Pending withdrawal already exist and not withdrawn yet"
+    },
+    {
+      "code": 6039,
+      "name": "DepositZero",
+      "msg": "Cannot deposit zero amount directly to shdw_pool vault"
+    },
+    {
+      "code": 6040,
+      "name": "InvalidConfigValue",
+      "msg": "Invalid config value"
+    },
+    {
+      "code": 6041,
+      "name": "InvalidPenaltyPercentage",
+      "msg": "Invalid penalty percentage"
+    },
+    {
+      "code": 6042,
+      "name": "EarlyWithdrawalNotAllowed",
+      "msg": "Early withdrawal not allowed"
+    },
+    {
+      "code": 6043,
+      "name": "InvalidLockingTimestamps",
+      "msg": "Invalid locking timestamps"
+    },
+    {
+      "code": 6044,
+      "name": "InvalidRpsCurvePoint",
+      "msg": "Invalid reward rate curve point"
+    },
+    {
+      "code": 6045,
+      "name": "InvalidTimestamp",
+      "msg": "Invalid timestamp"
+    },
+    {
+      "code": 6046,
+      "name": "DepositCapReached",
+      "msg": "Deposit cap reached"
+    },
+    {
+      "code": 6047,
+      "name": "MissingScopePrices",
+      "msg": "Missing Scope Prices"
+    },
+    {
+      "code": 6048,
+      "name": "ScopeOraclePriceTooOld",
+      "msg": "Scope Oracle Price Too Old"
+    },
+    {
+      "code": 6049,
+      "name": "InvalidOracleConfig",
+      "msg": "Invalid Oracle Config"
+    },
+    {
+      "code": 6050,
+      "name": "CouldNotDeserializeScope",
+      "msg": "Could not deserialize scope"
+    }
+  ]
+}

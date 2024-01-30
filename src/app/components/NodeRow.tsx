@@ -1,16 +1,23 @@
 "use client";
 
+import * as anchor from "@coral-xyz/anchor";
 import Image from "next/image";
 import Link from "next/link";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import { NodeInfo } from "../types";
 import { formatNumbers, secondsToDhms } from "../utils/string";
+
+import idl from "../utils/shdw_reward_staking_pool.idl.json";
+
+const NodeWallet = require("@project-serum/anchor/dist/cjs/nodewallet");
+let nodeWallet = NodeWallet.default;
+let wallet = new nodeWallet(Keypair.generate());
 
 function ellipsis(str: string, max: number) {
   if (str.length <= max) {
@@ -108,6 +115,7 @@ export default function TableRow(props: TableRowProps) {
   const nodeConfig: NodeInfo = props.nodeConfig || undefined;
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
   const [shdwBalance, setShdwBalance] = useState<number | null>(null);
+  const [shdwStake, setShdwStake] = useState<number | null>(null);
 
   const getStorage = useCallback((key: string) => {
     if (!window) return null;
@@ -211,10 +219,54 @@ export default function TableRow(props: TableRowProps) {
     }
   }, [id]);
 
+  const fetchShdwStake = useCallback(async () => {
+    const pubKey = new PublicKey(id);
+
+    let e;
+    let [address] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("user"),
+        new PublicKey(
+          "EM2u3eTQgusA3vALZ1P6w6oZZBgRY3qvEraRKpor6kEy"
+        ).toBuffer(),
+        pubKey.toBuffer(),
+      ],
+      new PublicKey("AvqeyEDqW9jaBi7yrRA6AxJtLbMzRY9NX75HuPTMoS4i")
+    );
+
+    const provider = new anchor.AnchorProvider(
+      new Connection(
+        "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
+        {
+          commitment: "processed",
+        }
+      ),
+      // new anchor.Wallet(Keypair.generate()),
+      wallet,
+      {
+        commitment: "processed",
+      }
+    );
+    const program = new anchor.Program(
+      idl as anchor.Idl,
+      "AvqeyEDqW9jaBi7yrRA6AxJtLbMzRY9NX75HuPTMoS4i",
+      provider
+    );
+
+    try {
+      e = await program.account.userState.fetch(address);
+    } catch (t) {
+      return null;
+    }
+
+    setShdwStake(parseInt(String(e.activeStakeScaled)) / 1e18 / 1e9);
+  }, []);
+
   useEffect(() => {
     fetchNodesStats();
     fetchShdwBalance();
-  }, [fetchNodesStats, fetchShdwBalance, uptime]);
+    fetchShdwStake();
+  }, [fetchNodesStats, fetchShdwBalance, fetchShdwStake, uptime]);
 
   return (
     <Table.Row
@@ -430,11 +482,17 @@ export default function TableRow(props: TableRowProps) {
       </span>
 
       {/* BALANCE */}
-      <span className="flex gap-2 px-4 text-right items-center justify-end">
-        <div className="">{formatNumbers(shdwBalance || 0)}</div>
-        <div className="">
-          <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+      <span className="flex flex-col gap-2 px-4 text-right items-center justify-end">
+        <div className="flex gap-2 items-center">
+          <div className="">
+            {formatNumbers((shdwBalance || 0) + (shdwStake || 0))}
+          </div>
+          <div className="">
+            <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+          </div>
         </div>
+
+        <span className="text-sm">{formatNumbers(shdwStake || 0)}</span>
       </span>
 
       {/* UPTIME */}
