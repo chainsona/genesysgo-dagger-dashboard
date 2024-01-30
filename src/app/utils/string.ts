@@ -6,10 +6,10 @@ function secondsToDhms(seconds: number, full: boolean = false) {
   return full ? `${d}d ${h}h ${m}min` : `${d}d ${h}h ${m}min`;
 }
 
-function formatNumbers(value: number) {
+function formatNumbers(value: number, decimals: number = 2) {
   return `${(value).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   })}`;
 }
 
