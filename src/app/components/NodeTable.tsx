@@ -17,7 +17,7 @@ export default function NodeTable(props: NodeTableProps) {
   const { nodes, nodesInfo, maxPage, page, setPage } = props;
 
   return (
-    <div className="flex border border-base-100 rounded-xl overflow-auto">
+    <div className="flex flex-col border border-base-100 rounded-xl overflow-auto">
       <Table className="w-full">
         <Table.Head className="sm:h-16 text-center table-column sm:table-header-group	text-lg text-gray-300">
           <span className="px-4">Rank</span>
@@ -52,48 +52,41 @@ export default function NodeTable(props: NodeTableProps) {
             />
           ))}
         </Table.Body>
-
-        <Table.Footer>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span className="flex gap-1 items-center">
-            <button
-              className="btn btn-ghost"
-              onClick={() => setPage(1)}
-              disabled={page <= 0}
-            >
-              First
-            </button>
-            <button
-              className="btn btn-ghost"
-              onClick={() => setPage(Math.max(0, page - 1))}
-              disabled={page <= 0}
-            >
-              Previous
-            </button>
-            <span className="w-28 px-4 text-center text-gray-300">{page + 1} / {maxPage}</span>
-            <button
-              className="btn btn-ghost"
-              onClick={() => setPage(Math.min(maxPage, page + 1))}
-              disabled={page === maxPage}
-            >
-              Next
-            </button>
-            <button
-              className="btn btn-ghost"
-              onClick={() => setPage(maxPage - 1)}
-              disabled={page >= maxPage}
-            >
-              Last
-            </button>
-          </span>
-        </Table.Footer>
       </Table>
+
+      <div className="flex items-center justify-end gap-2">
+        <button
+          className="px-4 py-3 hover:bg-gray-800"
+          onClick={() => setPage(1)}
+          disabled={page <= 0}
+        >
+          First
+        </button>
+        <button
+          className="px-4 py-3 hover:bg-gray-800"
+          onClick={() => setPage(Math.max(0, page - 1))}
+          disabled={page <= 0}
+        >
+          Previous
+        </button>
+        <span className="w-28 px-4 text-center text-gray-300">
+          {page + 1} / {maxPage}
+        </span>
+        <button
+          className="px-4 py-3 hover:bg-gray-800"
+          onClick={() => setPage(Math.min(maxPage, page + 1))}
+          disabled={page === maxPage}
+        >
+          Next
+        </button>
+        <button
+          className="px-4 py-3 hover:bg-gray-800"
+          onClick={() => setPage(maxPage - 1)}
+          disabled={page >= maxPage}
+        >
+          Last
+        </button>
+      </div>
     </div>
   );
 }
