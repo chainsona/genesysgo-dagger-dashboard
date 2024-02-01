@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Input } from "react-daisyui";
+import { Button, Input, Progress } from "react-daisyui";
 import { toast } from "react-toastify";
 
 import NodeLimit from "./components/NodeLimit";
@@ -13,7 +13,7 @@ import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
-import { secondsToDhms } from "./utils/string";
+import { formatNumbers, secondsToDhms } from "./utils/string";
 import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
 
 export default function Home() {
@@ -26,6 +26,7 @@ export default function Home() {
   const [page, setPage] = useState<number>(
     parseInt(searchParams.get("page") || "0")
   );
+  const [network, setNetwork] = useState<any | null>(null);
 
   const getStorage = useCallback((key: string) => {
     if (typeof window !== "undefined") {
@@ -39,6 +40,26 @@ export default function Home() {
   const [nodesInfo, setNodesInfo] = useState<any>({});
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
+
+  const fetchNetwork = useCallback(() => {
+    fetch("https://api.dagger-testnet.shdwdrive.com/rpc", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "get_latest_bundlehash",
+        params: [],
+        id: 1,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => setNetwork(data?.result?.get_latest_bundlehash))
+      .catch((e: any) => {
+        console.error(JSON.stringify(e));
+      });
+  }, []);
 
   const fetchNodes = useCallback(() => {
     fetch("https://shdw-rewards-oracle.shdwdrive.com/node-leaderboard")
@@ -80,9 +101,10 @@ export default function Home() {
   }, [nodesInfo]);
 
   useEffect(() => {
+    fetchNetwork();
     fetchNodes();
     fetchNodesInfo();
-  }, [fetchNodes, fetchNodesInfo]);
+  }, [fetchNetwork, fetchNodes, fetchNodesInfo]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -93,6 +115,16 @@ export default function Home() {
       clearInterval(timer);
     };
   }, [fetchNodes, refresh]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      fetchNetwork();
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [fetchNetwork]);
 
   const visibleNodes = useMemo(() => {
     return nodes
@@ -145,11 +177,32 @@ export default function Home() {
   return (
     <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
       <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
-        <Link href="/">
-          <div className="flex-grow text-2xl text-gray-200 text-center hover:underline">
-            D.A.G.G.E.R. Testnet2 Dashboard
-          </div>
-        </Link>
+        <div className="flex flex-col gap-2">
+          <Link href="/">
+            <div className="flex-grow text-2xl text-gray-200 text-center hover:underline">
+              D.A.G.G.E.R. Testnet2 Dashboard
+            </div>
+          </Link>
+          {network && (
+            <div className="flex flex-col w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
+              <div className="flex w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
+                <div className="">Epoch: {formatNumbers(network.epoch, 0)}</div>
+                <div className="relative overflow-hidden flex flex-col rounded-full overflow-hidden">
+                  <Progress
+                    className="w-32"
+                    value={(network.bundle % 128) / 128}
+                  />
+                  <div className="absolute p-1 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs text-gray-300 font-semibold">
+                    {network.bundle % 128} / 128
+                  </div>
+                </div>
+                <div className="">
+                  Bundle: {formatNumbers(network.bundle, 0)}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lg">
           <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
