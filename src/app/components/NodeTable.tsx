@@ -56,14 +56,14 @@ export default function NodeTable(props: NodeTableProps) {
 
       <div className="flex items-center justify-end gap-2">
         <button
-          className="px-4 py-3 hover:bg-gray-800"
-          onClick={() => setPage(1)}
+          className="px-4 py-3 hover:bg-gray-800 disabled:text-gray-600"
+          onClick={() => setPage(0)}
           disabled={page <= 0}
         >
           First
         </button>
         <button
-          className="px-4 py-3 hover:bg-gray-800"
+          className="px-4 py-3 hover:bg-gray-800 disabled:text-gray-600"
           onClick={() => setPage(Math.max(0, page - 1))}
           disabled={page <= 0}
         >
@@ -73,16 +73,16 @@ export default function NodeTable(props: NodeTableProps) {
           {page + 1} / {maxPage}
         </span>
         <button
-          className="px-4 py-3 hover:bg-gray-800"
+          className="px-4 py-3 hover:bg-gray-800 disabled:text-gray-600"
           onClick={() => setPage(Math.min(maxPage, page + 1))}
-          disabled={page === maxPage}
+          disabled={page === maxPage - 1}
         >
           Next
         </button>
         <button
-          className="px-4 py-3 hover:bg-gray-800"
+          className="px-4 py-3 hover:bg-gray-800 disabled:text-gray-600"
           onClick={() => setPage(maxPage - 1)}
-          disabled={page >= maxPage}
+          disabled={page >= maxPage - 1}
         >
           Last
         </button>
