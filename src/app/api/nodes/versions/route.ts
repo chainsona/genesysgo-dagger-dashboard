@@ -1,15 +1,16 @@
 export const dynamic = "force-dynamic"; // defaults to auto
 
 export async function GET() {
-  const versionMatrix = [
-    { refId: "1", version: "0.7.0" },
-    { refId: "2", version: "0.7.1" },
-    { refId: "3", version: "0.8.0" },
-    { refId: "4", version: "0.8.1" },
-    { refId: "5", version: "0.8.2" },
-    { refId: "6", version: "0.8.3" },
-    { refId: "7", version: "0.9.0" },
-  ];
+  const versionsToCheck = [];
+
+  const fromMinor = 7;
+  const minorVersions = 10;
+  const buildVersions = 10;
+  for (let minor = 0; minor < minorVersions; minor++) {
+    for (let build = 0; build < buildVersions; build++) {
+      versionsToCheck.push(`0.${fromMinor + minor}.${build}`);
+    }
+  }
 
   const res = await fetch(
     "https://dashboard.shdwdrive.com/api/ds/query?ds_type=loki&requestId=Q108_1",
@@ -19,16 +20,16 @@ export async function GET() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        queries: versionMatrix.map((data) => {
+        queries: versionsToCheck.map((v) => {
           return {
             datasource: {
               type: "loki",
               uid: "a70b7855-0233-40db-8ae1-ddd2e18dc418",
             },
             editorMode: "builder",
-            expr: `{label=\"node_count_version_${data.version}` + '"} |= ``',
+            expr: `{label=\"node_count_version_${v}` + '"} |= ``',
             queryType: "range",
-            refId: data.refId,
+            refId: v,
             maxLines: 1,
             legendFormat: "",
             datasourceId: 1,
@@ -43,22 +44,14 @@ export async function GET() {
   );
   const data = await res.json();
 
-  const result = versionMatrix.map((data) => {
-    return {
-      refId: data.refId,
-      version: data.version,
-      count: data.refId === "E" ? 0 : data.refId === "D" ? 1 : 2,
-    };
-  });
-
   const versions = [];
-  for (const matrix of versionMatrix) {
-    const d = data.results[matrix.refId].frames[0].data.values[2]?.[0];
+  for (const version of versionsToCheck) {
+    const d = data.results[version].frames[0].data.values[2]?.[0];
     if (!d) {
       continue;
     }
     versions.push({
-      version: matrix.version,
+      version: version,
       count: d.split(": ")[1],
     });
   }
