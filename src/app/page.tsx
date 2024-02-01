@@ -21,10 +21,10 @@ export default function Home() {
   const searchParams = useSearchParams();
   const keyword = searchParams.get("q") || "";
   const [limit, setLimit] = useState(
-    parseInt(searchParams.get("limit") || "20") || 20
+    parseInt(searchParams.get("limit") || "20")
   );
   const [page, setPage] = useState<number>(
-    parseInt(searchParams.get("page") || "1") || 1
+    parseInt(searchParams.get("page") || "0")
   );
 
   const getStorage = useCallback((key: string) => {
@@ -119,7 +119,7 @@ export default function Home() {
             return Number(b.rank) - Number(a.rank);
         }
       })
-      .splice((page - 1) * limit, limit);
+      .splice(page * limit, limit);
   }, [limit, nodes, page, keyword, sort]);
 
   const setFilter = useCallback(

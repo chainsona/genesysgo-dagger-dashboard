@@ -65,18 +65,18 @@ export default function NodeTable(props: NodeTableProps) {
             <button
               className="btn btn-ghost"
               onClick={() => setPage(1)}
-              disabled={page <= 1}
+              disabled={page <= 0}
             >
               First
             </button>
             <button
               className="btn btn-ghost"
-              onClick={() => setPage(Math.max(1, page - 1))}
-              disabled={page <= 1}
+              onClick={() => setPage(Math.max(0, page - 1))}
+              disabled={page <= 0}
             >
               Previous
             </button>
-            <span className="px-4">{page}</span>
+            <span className="w-28 px-4 text-center text-gray-300">{page + 1} / {maxPage}</span>
             <button
               className="btn btn-ghost"
               onClick={() => setPage(Math.min(maxPage, page + 1))}
@@ -86,8 +86,8 @@ export default function NodeTable(props: NodeTableProps) {
             </button>
             <button
               className="btn btn-ghost"
-              onClick={() => setPage(maxPage)}
-              disabled={page === maxPage}
+              onClick={() => setPage(maxPage - 1)}
+              disabled={page >= maxPage}
             >
               Last
             </button>
