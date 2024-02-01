@@ -8,10 +8,13 @@ import { Node } from "../types";
 type NodeTableProps = {
   nodes: Node[];
   nodesInfo?: any;
+  page: number;
+  maxPage: number;
+  setPage: (page: number) => void;
 };
 
 export default function NodeTable(props: NodeTableProps) {
-  const { nodes, nodesInfo } = props;
+  const { nodes, nodesInfo, maxPage, page, setPage } = props;
 
   return (
     <div className="flex border border-base-100 rounded-xl overflow-auto">
@@ -49,6 +52,47 @@ export default function NodeTable(props: NodeTableProps) {
             />
           ))}
         </Table.Body>
+
+        <Table.Footer>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span className="flex gap-1 items-center">
+            <button
+              className="btn btn-ghost"
+              onClick={() => setPage(1)}
+              disabled={page <= 1}
+            >
+              First
+            </button>
+            <button
+              className="btn btn-ghost"
+              onClick={() => setPage(Math.max(1, page - 1))}
+              disabled={page <= 1}
+            >
+              Previous
+            </button>
+            <span className="px-4">{page}</span>
+            <button
+              className="btn btn-ghost"
+              onClick={() => setPage(Math.min(maxPage, page + 1))}
+              disabled={page === maxPage}
+            >
+              Next
+            </button>
+            <button
+              className="btn btn-ghost"
+              onClick={() => setPage(maxPage)}
+              disabled={page === maxPage}
+            >
+              Last
+            </button>
+          </span>
+        </Table.Footer>
       </Table>
     </div>
   );

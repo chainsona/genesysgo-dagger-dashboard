@@ -32,14 +32,12 @@ export default function NodeRefresh(props: NodeRefreshProps) {
   };
 
   return (
-    <div className="flex flex-row text-right items-center gap-2">
-      <div className="sm:w-28 text-gray-400 text text-center">
-        Refresh (min)
-      </div>
+    <div className="w-full flex text-right items-center gap-2">
+      <div className="w-48 text-gray-400 text text-center">Refresh (min)</div>
       <Input
         id="refresh"
         placeholder="Refresh interval (minutes)"
-        className="w-20 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
+        className="w-full px-4 py-3 bg-base-100 rounded-md bg-gray-900"
         value={refresh}
         type="number"
         min={1}
