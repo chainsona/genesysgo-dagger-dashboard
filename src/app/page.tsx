@@ -284,7 +284,9 @@ export default function Home() {
         nodesInfo={nodesInfo}
         page={page}
         setPage={setPage}
-        maxPage={Math.ceil(nodes.length / limit)}
+        maxPage={Math.ceil(
+          (!!keyword ? visibleNodes.length : nodes.length) / limit
+        )}
       />
 
       <div className="flex flex-grow"></div>
