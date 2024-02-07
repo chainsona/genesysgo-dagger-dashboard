@@ -3,9 +3,9 @@ export const dynamic = "force-dynamic"; // defaults to auto
 export async function GET() {
   const versionsToCheck = [];
 
-  const fromMinor = 7;
-  const minorVersions = 5;
-  const buildVersions = 10;
+  const fromMinor = 8;
+  const minorVersions = 2;
+  const buildVersions = 5;
   for (let minor = 0; minor < minorVersions; minor++) {
     for (let build = 0; build < buildVersions; build++) {
       versionsToCheck.push(`0.${fromMinor + minor}.${build}`);
