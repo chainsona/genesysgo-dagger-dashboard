@@ -5,7 +5,7 @@ export async function GET() {
 
   const fromMinor = 8;
   const minorVersions = 2;
-  const buildVersions = 5;
+  const buildVersions = 10;
   for (let minor = 0; minor < minorVersions; minor++) {
     for (let build = 0; build < buildVersions; build++) {
       versionsToCheck.push(`0.${fromMinor + minor}.${build}`);
