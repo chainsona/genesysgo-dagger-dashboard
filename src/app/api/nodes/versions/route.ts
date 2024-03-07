@@ -4,7 +4,7 @@ export async function GET() {
   const versionsToCheck = [];
 
   const fromMinor = 8;
-  const minorVersions = 2;
+  const minorVersions = 1;
   const buildVersions = 10;
   for (let minor = 0; minor < minorVersions; minor++) {
     for (let build = 0; build < buildVersions; build++) {
