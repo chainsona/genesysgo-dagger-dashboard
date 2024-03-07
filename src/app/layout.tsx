@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
+import UiLayout from "./components/UiLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,21 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        {children}
+        <UiLayout>{children}</UiLayout>
         <Analytics />
-        <ToastContainer
-          position="bottom-center"
-          autoClose={1500}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-          transition={Slide}
-        />
       </body>
     </html>
   );
