@@ -44,8 +44,8 @@ export default function NodeStats(props: NodeStatsProps) {
       },
       {
         title: !versions
-          ? "Wield version"
-          : "Wield version " + versions[versions.length - 1].version,
+          ? "shdwNode version"
+          : "shdwNode version " + versions[versions.length - 1].version,
         value: !versions ? "N/A" : versions[versions.length - 1].count,
         note: !versions
           ? "N/A"
