@@ -178,7 +178,9 @@ export default function Home() {
     <main className="dark flex flex-col min-h-screen max-h-screen w-full text-left overflow-x-auto gap-4">
       <Header />
 
-      <NodeStats nodes={nodes} />
+      <div className="p-4 py-0">
+        <NodeStats network={network} nodes={nodes} />
+      </div>
 
       <div className="flex flex-col md:flex-row w-full component-preview items-center justify-center gap-2 font-sans">
         <div className="w-full flex flex-row items-center gap-2">
