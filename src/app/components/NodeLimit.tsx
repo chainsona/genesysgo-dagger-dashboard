@@ -13,7 +13,7 @@ export default function NodeLimit(props: NodeLimitProps) {
   return (
     <div className="w-full flex flex-row text-right items-center gap-2">
       <Select
-        className="w-full px-4 py-2 bg-base-100 rounded-md bg-gray-900"
+        className="w-full px-4 py-2 bg-[#1C2027] rounded-md"
         onChange={(event) => {
           setLimit(parseInt(event.target.value));
         }}

@@ -178,53 +178,51 @@ export default function Home() {
     <main className="dark flex flex-col min-h-screen max-h-screen w-full text-left overflow-x-auto gap-4">
       <Header />
 
-      <div className="p-4 py-0">
+      <div className="flex flex-col gap-4 p-4 py-0">
         <NodeStats network={network} nodes={nodes} />
-      </div>
 
-      <div className="flex flex-col md:flex-row w-full component-preview items-center justify-center gap-2 font-sans">
-        <div className="w-full flex flex-row items-center gap-2">
-          <Input
-            id="search"
-            placeholder="Search by node ID (comma separated)"
-            className="w-full px-4 py-3 bg-base-100 rounded-md bg-gray-900"
-            value={keyword}
-            onChange={() => {
-              const keyword = (
-                document.getElementById("search") as HTMLInputElement
-              ).value;
-              setFilter(keyword);
-            }}
-          />
-          <Button
-            hidden={keyword.replace(/\s/g, "") === ""}
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            Clear
-          </Button>
-        </div>
-        <div className="w-full flex flex-col md:flex-row gap-2 grow">
-          <div className="w-full flex gap-4">
-            <NodeLimit limit={limit} setLimit={setLimit} />
-            <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
+        <div className="flex flex-col md:flex-row w-full component-preview items-center justify-center gap-2 font-sans">
+          <div className="w-full flex flex-row items-center gap-2">
+            <Input
+              id="search"
+              placeholder="Search by node ID (comma separated)"
+              className="w-full px-4 py-3 rounded-md bg-[#1C2027]"
+              value={keyword}
+              onChange={() => {
+                const keyword = (
+                  document.getElementById("search") as HTMLInputElement
+                ).value;
+                setFilter(keyword);
+              }}
+            />
+            <Button
+              hidden={keyword.replace(/\s/g, "") === ""}
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              Clear
+            </Button>
           </div>
-          <NodeSort sort={sort} setSort={setSort} />
+          <div className="w-full flex flex-col md:flex-row gap-2 grow">
+            <div className="w-full flex gap-4">
+              <NodeLimit limit={limit} setLimit={setLimit} />
+              <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
+            </div>
+            <NodeSort sort={sort} setSort={setSort} />
+          </div>
         </div>
+
+        <NodeTable
+          nodes={visibleNodes}
+          nodesInfo={nodesInfo}
+          page={page}
+          setPage={setPage}
+          maxPage={Math.ceil(
+            (!!keyword ? visibleNodes.length : nodes.length) / limit
+          )}
+        />
       </div>
-
-      <NodeTable
-        nodes={visibleNodes}
-        nodesInfo={nodesInfo}
-        page={page}
-        setPage={setPage}
-        maxPage={Math.ceil(
-          (!!keyword ? visibleNodes.length : nodes.length) / limit
-        )}
-      />
-
-      <div className="flex flex-grow"></div>
     </main>
   );
 }
