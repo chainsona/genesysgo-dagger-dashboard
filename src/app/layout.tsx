@@ -9,8 +9,9 @@ import UiLayout from "./components/UiLayout";
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
-  title: "D.A.G.G.E.R. Testnet2 Dashboard",
-  description: "Dashboard for the SHDW Incentivized Testnet V2",
+  title: "ShdwDrive D.A.G.G.E.R. Dashboard",
+  description:
+    "Dashboard for the ShdwDrive D.A.G.G.E.R. Testnet2 Incentivized Testnet V2 by GenesysGo",
 };
 
 export default function RootLayout({
