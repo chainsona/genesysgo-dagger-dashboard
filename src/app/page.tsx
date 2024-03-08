@@ -14,7 +14,7 @@ import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
 import { formatNumbers, secondsToDhms } from "./utils/string";
-import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
+import Header from "./components/Header";
 
 export default function Home() {
   const router = useRouter();
@@ -175,75 +175,8 @@ export default function Home() {
   }, [limit, keyword, setFilter]);
 
   return (
-    <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
-      <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
-        <div className="flex flex-col gap-2">
-          <Link href="/">
-            <div className="flex-grow text-2xl text-gray-200 text-center hover:underline">
-              D.A.G.G.E.R. Testnet2 Dashboard
-            </div>
-          </Link>
-          {network && (
-            <div className="flex flex-col w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
-              <div className="flex w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
-                <div className="">Epoch: {formatNumbers(network.epoch, 0)}</div>
-                <div className="relative overflow-hidden flex flex-col rounded-full overflow-hidden">
-                  <Progress
-                    className="w-32"
-                    value={(network.bundle % 128) / 128}
-                  />
-                  <div className="absolute p-1 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs text-gray-300 font-semibold">
-                    {network.bundle % 128} / 128
-                  </div>
-                </div>
-                <div className="">
-                  Bundle: {formatNumbers(network.bundle, 0)}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lg">
-          <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
-            <div className="text-gray-400 hover:underline text-center">
-              Official website
-            </div>
-          </Link>
-          <Link href="https://x.com/chainsona" passHref target="_blank">
-            <div className="text-gray-400 hover:underline text-center">
-              Follow me on 𝕏
-            </div>
-          </Link>
-          <div className="flex flex-row gap-2 text-gray-400 text-center items-center">
-            <div className="">
-              Tip <span>chainsona.sol</span>
-            </div>
-            <div
-              className="hover: cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText("chainsona.sol");
-                toast("Copied to clipboard!");
-              }}
-            >
-              <svg
-                stroke="currentColor"
-                fill="none"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
+    <main className="dark flex flex-col min-h-screen max-h-screen w-full text-left overflow-x-auto gap-4">
+      <Header />
 
       <NodeStats nodes={nodes} />
 
