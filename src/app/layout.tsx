@@ -10,8 +10,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "ShdwDrive D.A.G.G.E.R. Dashboard",
-  description:
-    "Dashboard for the ShdwDrive D.A.G.G.E.R. Testnet2 Incentivized Testnet V2 by GenesysGo",
+  description: "Dashboard for the ShdwDrive D.A.G.G.E.R. Testnet2 by GenesysGo",
 };
 
 export default function RootLayout({
