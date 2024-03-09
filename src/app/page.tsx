@@ -1,20 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Input, Progress } from "react-daisyui";
-import { toast } from "react-toastify";
 
-import NodeLimit from "./components/NodeLimit";
-import NodeRefresh from "./components/NodeRefresh";
-import NodeSort from "./components/NodeSort";
+import Header from "./components/Header";
 import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
-import { formatNumbers, secondsToDhms } from "./utils/string";
-import Header from "./components/Header";
+import { secondsToDhms } from "./utils/string";
 
 export default function Home() {
   const router = useRouter();
@@ -35,7 +29,6 @@ export default function Home() {
     return null;
   }, []);
 
-  const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [nodesInfo, setNodesInfo] = useState<any>({});
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
@@ -119,7 +112,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => {
       fetchNetwork();
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearInterval(timer);
@@ -175,52 +168,27 @@ export default function Home() {
   }, [limit, keyword, setFilter]);
 
   return (
-    <main className="dark flex flex-col min-h-screen max-h-screen w-full text-left overflow-x-auto gap-4">
-      <Header />
+    <main
+      className="overflow-hidden min-h-screen w-full
+      flex flex-col gap-4 pb-4 bg-[#1E1E1E] text-left"
+    >
+      <div className="z-10 fixed w-full bg-[#1E1E1E] pb-2">
+        <Header />
+      </div>
 
-      <div className="flex flex-col gap-4 p-4 py-0">
+      <div className="flex flex-col gap-4 p-4 pt-20 pb-24">
         <NodeStats network={network} nodes={nodes} />
 
-        <div className="flex flex-col md:flex-row w-full component-preview items-center justify-center gap-2 font-sans">
-          <div className="w-full flex flex-row items-center gap-2">
-            <Input
-              id="search"
-              placeholder="Search by node ID (comma separated)"
-              className="w-full px-4 py-3 rounded-md bg-[#1C2027]"
-              value={keyword}
-              onChange={() => {
-                const keyword = (
-                  document.getElementById("search") as HTMLInputElement
-                ).value;
-                setFilter(keyword);
-              }}
-            />
-            <Button
-              hidden={keyword.replace(/\s/g, "") === ""}
-              onClick={() => {
-                router.push("/");
-              }}
-            >
-              Clear
-            </Button>
-          </div>
-          <div className="w-full flex flex-col md:flex-row gap-2 grow">
-            <div className="w-full flex gap-4">
-              <NodeLimit limit={limit} setLimit={setLimit} />
-              <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
-            </div>
-            <NodeSort sort={sort} setSort={setSort} />
-          </div>
-        </div>
-
         <NodeTable
-          nodes={visibleNodes}
-          nodesInfo={nodesInfo}
-          page={page}
-          setPage={setPage}
           maxPage={Math.ceil(
             (!!keyword ? visibleNodes.length : nodes.length) / limit
           )}
+          nodes={visibleNodes}
+          nodesInfo={nodesInfo}
+          page={page}
+          sort={sort}
+          setPage={setPage}
+          setSort={setSort}
         />
       </div>
     </main>
