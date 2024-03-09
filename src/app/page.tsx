@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import ControlPanel from "./components/ControlPanel";
 import Header from "./components/Header";
 import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
@@ -119,6 +120,15 @@ export default function Home() {
     };
   }, [fetchNetwork]);
 
+  const filteredNodes = useMemo(() => {
+    return nodes.filter(
+      (node: Node) =>
+        keyword === "" ||
+        node.node_id.toLowerCase().includes(keyword.toLowerCase()) ||
+        keyword.toLowerCase().split(",").includes(node.node_id.toLowerCase())
+    );
+  }, [keyword, nodes]);
+
   const visibleNodes = useMemo(() => {
     return nodes
       .filter(
@@ -145,7 +155,7 @@ export default function Home() {
         }
       })
       .splice(page * limit, limit);
-  }, [limit, nodes, page, keyword, sort]);
+  }, [keyword, limit, nodes, page, sort]);
 
   const setFilter = useCallback(
     (keyword: string) => {
@@ -188,6 +198,20 @@ export default function Home() {
           page={page}
           sort={sort}
           setPage={setPage}
+          setSort={setSort}
+        />
+      </div>
+
+      <div className="z-10 fixed bottom-4 left-6 right-6">
+        <ControlPanel
+          keyword={keyword}
+          limit={limit}
+          nodes={filteredNodes}
+          refresh={refresh}
+          sort={sort}
+          setFilter={setFilter}
+          setLimit={setLimit}
+          setRefresh={setRefresh}
           setSort={setSort}
         />
       </div>
