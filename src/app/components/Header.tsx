@@ -15,14 +15,19 @@ type HeaderProps = {};
 
 export default function Header({}: HeaderProps) {
   return (
-    <div className="w-full flex p-4 items-center justify-between">
-      <div className="flex flex-col gap-1">
-        <div
-          className={`${robotoCondensed.className} font-bold text-xl text-gray-300 uppercase`}
-        >
-          D.A.G.G.E.R. Dashboard
+    <div className="w-full flex px-4 pt-4 items-center justify-between">
+      <Link href="/" passHref target="_self">
+        <div className="flex flex-col gap-">
+          <div
+            className={`${robotoCondensed.className} font-bold text-xl text-gray-300 uppercase`}
+          >
+            D.A.G.G.E.R. Dashboard
+          </div>
+          <div className="font-semibold text-gray-400 text-xs uppercase">
+            By Chainsona
+          </div>
         </div>
-      </div>
+      </Link>
 
       <div className="flex items-center gap-4 text-lg">
         <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
@@ -37,15 +42,15 @@ export default function Header({}: HeaderProps) {
             𝕏
           </div>
         </Link>
-        <div
-          className="bg-gray-800 hover:bg-green-900 hover:cursor-pointer p-2 text-gray-300 font-semibold text-sm text-center uppercase"
-          onClick={() => {
-            navigator.clipboard.writeText("chainsona.sol");
-            toast("Address chainsona.sol copied!");
-          }}
+        <Link
+          href="https://www.devnet.directory/user/2sbEWeiYGyyLdgmBB8MUwZWcyWBSzoCQd5T4fG3MPkR2"
+          passHref
+          target="_blank"
         >
-          TIP
-        </div>
+          <div className="bg-gray-800 hover:bg-green-900 hover:cursor-pointer p-2 text-gray-300 font-semibold text-sm text-center uppercase">
+            <span className="animate-pulse">TIP</span>
+          </div>
+        </Link>
       </div>
     </div>
   );
