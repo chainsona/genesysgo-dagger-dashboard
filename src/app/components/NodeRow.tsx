@@ -439,7 +439,7 @@ export default function TableRow(props: TableRowProps) {
                   <path d="M9 8h.01"></path>
                 </svg>
                 <div className="text-sm font-semibold">
-                  {nodeConfig.wield_version}
+                  {nodeConfig.version}
                 </div>
               </div>
             </div>
