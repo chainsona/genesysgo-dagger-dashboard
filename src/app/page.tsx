@@ -1,20 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Input, Progress } from "react-daisyui";
-import { toast } from "react-toastify";
 
-import NodeLimit from "./components/NodeLimit";
-import NodeRefresh from "./components/NodeRefresh";
-import NodeSort from "./components/NodeSort";
+import ControlPanel from "./components/ControlPanel";
+import Header from "./components/Header";
+import NodeList from "./components/NodeList";
 import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
 
 import { Node } from "./types";
-import { formatNumbers, secondsToDhms } from "./utils/string";
-import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
+import { secondsToDhms } from "./utils/string";
 
 export default function Home() {
   const router = useRouter();
@@ -35,11 +31,23 @@ export default function Home() {
     return null;
   }, []);
 
-  const [filteredNodes, setFilteredNodes] = useState<Node[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [nodesInfo, setNodesInfo] = useState<any>({});
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
+  const [width, setWidth] = useState<number>(() => {
+    try {
+      return window.innerWidth;
+    } catch (e) {
+      return 0;
+    }
+  });
+
+  const isMobile = width <= 768;
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
 
   const fetchNetwork = useCallback(() => {
     fetch("https://api.dagger-testnet.shdwdrive.com/rpc", {
@@ -97,10 +105,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("nodesInfo", nodesInfo);
-  }, [nodesInfo]);
-
-  useEffect(() => {
     fetchNetwork();
     fetchNodes();
     fetchNodesInfo();
@@ -119,12 +123,21 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => {
       fetchNetwork();
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearInterval(timer);
     };
   }, [fetchNetwork]);
+
+  const filteredNodes = useMemo(() => {
+    return nodes.filter(
+      (node: Node) =>
+        keyword === "" ||
+        node.node_id.toLowerCase().includes(keyword.toLowerCase()) ||
+        keyword.toLowerCase().split(",").includes(node.node_id.toLowerCase())
+    );
+  }, [keyword, nodes]);
 
   const visibleNodes = useMemo(() => {
     return nodes
@@ -152,7 +165,7 @@ export default function Home() {
         }
       })
       .splice(page * limit, limit);
-  }, [limit, nodes, page, keyword, sort]);
+  }, [keyword, limit, nodes, page, sort]);
 
   const setFilter = useCallback(
     (keyword: string) => {
@@ -174,122 +187,69 @@ export default function Home() {
     setFilter(keyword);
   }, [limit, keyword, setFilter]);
 
+  useEffect(() => {
+    if (!window) return;
+
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
   return (
-    <main className="dark flex flex-col min-h-screen w-full text-left overflow-x-auto p-8 gap-4">
-      <div className="w-full flex flex-col gap-3 space-between pb-4 justify-center items-center">
-        <div className="flex flex-col gap-2">
-          <Link href="/">
-            <div className="flex-grow text-2xl text-gray-200 text-center hover:underline">
-              D.A.G.G.E.R. Testnet2 Dashboard
-            </div>
-          </Link>
-          {network && (
-            <div className="flex flex-col w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
-              <div className="flex w-full text-gray-300 text-sm text-center font-semibold uppercase items-center justify-center gap-3">
-                <div className="">Epoch: {formatNumbers(network.epoch, 0)}</div>
-                <div className="relative overflow-hidden flex flex-col rounded-full overflow-hidden">
-                  <Progress
-                    className="w-32"
-                    value={(network.bundle % 128) / 128}
-                  />
-                  <div className="absolute p-1 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs text-gray-300 font-semibold">
-                    {network.bundle % 128} / 128
-                  </div>
-                </div>
-                <div className="">
-                  Bundle: {formatNumbers(network.bundle, 0)}
-                </div>
-              </div>
-            </div>
+    <main
+      className="overflow-hidden min-h-screen w-full
+      flex flex-col gap-4 pb-4 bg-[#14161C] text-left"
+    >
+      <div className="z-10 fixed w-full bg-[#14161C] pb-2">
+        <Header />
+      </div>
+
+      <div className="flex flex-col md:flex-row-revers gap-4 p-4 pt-20 pb-24">
+        <NodeStats network={network} nodes={nodes} />
+
+        <div className="grow">
+          {isMobile ? (
+            <NodeList
+              maxPage={Math.ceil(
+                (!!keyword ? visibleNodes.length : nodes.length) / limit
+              )}
+              nodes={visibleNodes}
+              nodesInfo={nodesInfo}
+              page={page}
+              sort={sort}
+              setPage={setPage}
+              setSort={setSort}
+            />
+          ) : (
+            <NodeTable
+              maxPage={Math.ceil(
+                (!!keyword ? visibleNodes.length : nodes.length) / limit
+              )}
+              nodes={visibleNodes}
+              nodesInfo={nodesInfo}
+              page={page}
+              sort={sort}
+              setPage={setPage}
+              setSort={setSort}
+            />
           )}
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lg">
-          <Link href="https://testnet.shdwdrive.com/" passHref target="_blank">
-            <div className="text-gray-400 hover:underline text-center">
-              Official website
-            </div>
-          </Link>
-          <Link href="https://x.com/chainsona" passHref target="_blank">
-            <div className="text-gray-400 hover:underline text-center">
-              Follow me on 𝕏
-            </div>
-          </Link>
-          <div className="flex flex-row gap-2 text-gray-400 text-center items-center">
-            <div className="">
-              Tip <span>chainsona.sol</span>
-            </div>
-            <div
-              className="hover: cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText("chainsona.sol");
-                toast("Copied to clipboard!");
-              }}
-            >
-              <svg
-                stroke="currentColor"
-                fill="none"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <NodeStats nodes={nodes} />
-
-      <div className="flex flex-col md:flex-row w-full component-preview items-center justify-center gap-2 font-sans">
-        <div className="w-full flex flex-row items-center gap-2">
-          <Input
-            id="search"
-            placeholder="Search by node ID (comma separated)"
-            className="w-full px-4 py-3 bg-base-100 rounded-md bg-gray-900"
-            value={keyword}
-            onChange={() => {
-              const keyword = (
-                document.getElementById("search") as HTMLInputElement
-              ).value;
-              setFilter(keyword);
-            }}
-          />
-          <Button
-            hidden={keyword.replace(/\s/g, "") === ""}
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            Clear
-          </Button>
-        </div>
-        <div className="w-full flex flex-col md:flex-row gap-2 grow">
-          <div className="w-full flex gap-4">
-            <NodeLimit limit={limit} setLimit={setLimit} />
-            <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
-          </div>
-          <NodeSort sort={sort} setSort={setSort} />
-        </div>
+      <div className="z-10 fixed bottom-4 left-6 right-6">
+        <ControlPanel
+          keyword={keyword}
+          limit={limit}
+          nodes={filteredNodes}
+          refresh={refresh}
+          sort={sort}
+          setFilter={setFilter}
+          setLimit={setLimit}
+          setRefresh={setRefresh}
+          setSort={setSort}
+        />
       </div>
-
-      <NodeTable
-        nodes={visibleNodes}
-        nodesInfo={nodesInfo}
-        page={page}
-        setPage={setPage}
-        maxPage={Math.ceil(
-          (!!keyword ? visibleNodes.length : nodes.length) / limit
-        )}
-      />
-
-      <div className="flex flex-grow"></div>
     </main>
   );
 }

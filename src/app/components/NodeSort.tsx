@@ -11,26 +11,22 @@ export default function NodeSort(props: NodeSortProps) {
   const { sort, setSort } = props;
 
   return (
-    <Select
-      className="w-full md:w-64 px-4 py-2 bg-base-100 rounded-md bg-gray-900"
-      onChange={(event) => {
-        setSort(event.target.value);
-        localStorage.setItem("sort", event.target.value);
-      }}
-      value={sort}
-    >
-      <Select.Option value="rank-desc">Rank (first to last)</Select.Option>
-      <Select.Option value="rank-asc">Rank (last to first)</Select.Option>
-      <Select.Option value="rewards-desc">
-        Rewards (higher to lower)
-      </Select.Option>
-      <Select.Option value="rewards-asc">
-        Rewards (lower to higher)
-      </Select.Option>
-      <Select.Option value="uptime-desc">
-        Uptime (higher to lower)
-      </Select.Option>
-      <Select.Option value="uptime-asc">Uptime (lower to higher)</Select.Option>
-    </Select>
+    <div className="flex flex-row px-2 bg-[#1C2027] text-right items-center gap-2">
+      <Select
+        className="h-full bg-transparent px-4 py-2 rounded-md outline-none text-right sm:text-left"
+        onChange={(event) => {
+          setSort(event.target.value);
+          localStorage.setItem("sort", event.target.value);
+        }}
+        value={sort}
+      >
+        <Select.Option value="rank-desc">Rank (first)</Select.Option>
+        <Select.Option value="rank-asc">Rank (last)</Select.Option>
+        <Select.Option value="rewards-desc">Rewards (higher)</Select.Option>
+        <Select.Option value="rewards-asc">Rewards (lower)</Select.Option>
+        <Select.Option value="uptime-desc">Uptime (higher)</Select.Option>
+        <Select.Option value="uptime-asc">Uptime (lower)</Select.Option>
+      </Select>
+    </div>
   );
 }

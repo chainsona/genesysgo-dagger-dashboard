@@ -11,9 +11,9 @@ export default function NodeLimit(props: NodeLimitProps) {
   const { limit, setLimit } = props;
 
   return (
-    <div className="w-full flex flex-row text-right items-center gap-2">
+    <div className="flex flex-row items-center justify-end gap-2 px-2 bg-[#1C2027] text-right">
       <Select
-        className="w-full px-4 py-2 bg-base-100 rounded-md bg-gray-900"
+        className="h-full bg-transparent px-4 py-3 rounded-md outline-none"
         onChange={(event) => {
           setLimit(parseInt(event.target.value));
         }}

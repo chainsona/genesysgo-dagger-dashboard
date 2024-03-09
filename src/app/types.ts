@@ -16,7 +16,7 @@ type NodeInfo = {
   storage: number;
   cpu_type: string;
   last_updated: string;
-  wield_version: string;
+  version: string;
   lat: number;
   lon: number;
   ip_addr: string;
