@@ -37,7 +37,7 @@ export default function NodeRefresh(props: NodeRefreshProps) {
       <Input
         id="refresh"
         placeholder="Refresh interval (minutes)"
-        className="w-full px-4 py-3 rounded-md bg-[#1C2027]"
+        className="w-full px-4 py-3 rounded-md bg-[#323232]"
         value={refresh}
         type="number"
         min={1}
