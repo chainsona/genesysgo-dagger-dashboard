@@ -356,10 +356,15 @@ export default function NodeListItem(props: NodeListItemProps) {
                   </div>
                   {is_discord_verified ? "Verified" : "Unverified"}
                 </div>
-
                 {/* STATUS */}
-                <div className="text-sm text-gray-300 capitalize">
-                  {statusHelper(status)}
+                <div className="">
+                  <div
+                    className={`w-full rounded-full px-3 py-1 ${statusColorHelper(
+                      status
+                    )} font-semibold text-xs`}
+                  >
+                    {statusHelper(status)}
+                  </div>
                 </div>
               </div>
             </div>
