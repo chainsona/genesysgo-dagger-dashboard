@@ -19,7 +19,7 @@ export default function NodeTable(props: NodeTableProps) {
   const { nodes, nodesInfo, maxPage, page, sort, setPage, setSort } = props;
 
   return (
-    <div className="overflow-y-scroll rounded-xl flex flex-col">
+    <div className="overflow-hidden rounded-xl flex flex-col">
       <div className="flex items-center bg-[#323232] pr-2">
         <div className="grow px-4 py-2 font-semibold text-gray-300 text-lg uppercase">
           Shdw Nodes
@@ -28,7 +28,7 @@ export default function NodeTable(props: NodeTableProps) {
         <NodeSort sort={sort} setSort={setSort} />
       </div>
 
-      <div className="overflow-y-scroll flex flex-col gap-1">
+      <div className="overflow-hidden flex flex-col gap-1">
         {nodes.map((node: Node) => (
           <NodeItem
             id={node.node_id}
