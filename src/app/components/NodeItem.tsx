@@ -269,7 +269,7 @@ export default function NodeItem(props: NodeItemProps) {
       key={id}
       className={`${
         is_up ? "" : "text-gray-400"
-      } w-full flex flex-col p-4 gap-2 bg-[#323232] hover:bg-gray-900 text-gray-300`}
+      } w-full flex flex-col p-4 gap-2 bg-[#1C2027] hover:bg-gray-900 text-gray-300`}
     >
       <div className="flex gap-3 justify-start">
         <div className="flex flex-col gap-2">

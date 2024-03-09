@@ -20,7 +20,7 @@ export default function NodeTable(props: NodeTableProps) {
 
   return (
     <div className="overflow-hidden rounded-xl flex flex-col">
-      <div className="flex items-center bg-[#323232] pr-2">
+      <div className="flex items-center bg-[#1C2027] pr-2">
         <div className="grow px-4 py-2 font-semibold text-gray-300 text-lg uppercase">
           Shdw Nodes
         </div>
@@ -47,7 +47,7 @@ export default function NodeTable(props: NodeTableProps) {
 
       <div
         className="flex items-center justify-between gap-2
-          bg-[#323232] px-4 py-2 text-gray-400 uppercase"
+          bg-[#1C2027] px-4 py-2 text-gray-400 uppercase"
       >
         <button
           className="px-4 py-3 hover:bg-gray-800 disabled:text-gray-600"

@@ -59,7 +59,7 @@ export default function NodeStats({ network, nodes }: NodeStatsProps) {
   }, [nodes, versions]);
 
   return (
-    <div className="overflow-hidden rounded-xl bg-[#323232]">
+    <div className="overflow-hidden rounded-xl bg-[#1C2027]">
       <div className="flex flex-col gap-1 p-4 font-semibold text-gray-300">
         <div className="text-lg font-semibold uppercase">Network</div>
 

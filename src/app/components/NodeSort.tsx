@@ -12,7 +12,7 @@ export default function NodeSort(props: NodeSortProps) {
 
   return (
     <Select
-      className="h-8 px-2 py-1 rounded-md bg-[#323232] text-right outline-none"
+      className="h-8 px-2 py-1 rounded-md bg-[#1C2027] text-right outline-none"
       onChange={(event) => {
         setSort(event.target.value);
         localStorage.setItem("sort", event.target.value);

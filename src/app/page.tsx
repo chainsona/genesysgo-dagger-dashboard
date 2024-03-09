@@ -180,9 +180,9 @@ export default function Home() {
   return (
     <main
       className="overflow-hidden min-h-screen w-full
-      flex flex-col gap-4 pb-4 bg-[#1E1E1E] text-left"
+      flex flex-col gap-4 pb-4 bg-[#14161C] text-left"
     >
-      <div className="z-10 fixed w-full bg-[#1E1E1E] pb-2">
+      <div className="z-10 fixed w-full bg-[#14161C] pb-2">
         <Header />
       </div>
 

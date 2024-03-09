@@ -37,13 +37,13 @@ export default function ControlPanel({
 
   return (
     <div
-      className="overflow-hidden rounded-xl border-2 border-[#323232] flex flex-col gap-3
-        bg-[#1E1E1E] p-3"
+      className="overflow-hidden rounded-xl border-2 border-[#1C2027] flex flex-col gap-3
+        bg-[#14161C] p-3"
     >
       {currentControl === "search" && (
         <div className="">
           {/* SEARCH */}
-          <div className="rounded-xl w-full flex flex-row items-center gap-2 bg-[#323232] px-2">
+          <div className="rounded-xl w-full flex flex-row items-center gap-2 bg-[#1C2027] px-2">
             <Input
               id="search"
               placeholder="Search by node ID (id1,id2,...)"
@@ -113,8 +113,8 @@ export default function ControlPanel({
           className={`rounded-xl h-12 w-12 flex items-center justify-center
             ${
               currentControl === "search"
-                ? "bg-gray-300 text-gray-900"
-                : "bg-[#33343E] text-gray-400"
+                ? "bg-gray-400 text-gray-900"
+                : "bg-[#33343E] text-gray-300"
             }`}
           onClick={() => {
             setCurrentControl(currentControl !== "search" ? "search" : null);
@@ -138,8 +138,8 @@ export default function ControlPanel({
           className={`rounded-xl h-12 w-12 flex items-center justify-center
             ${
               currentControl === "refresh"
-                ? "bg-gray-300 text-gray-900"
-                : "bg-[#33343E] text-gray-400"
+                ? "bg-gray-400 text-gray-900"
+                : "bg-[#33343E] text-gray-300"
             }`}
           onClick={() => {
             setCurrentControl(currentControl !== "refresh" ? "refresh" : null);
