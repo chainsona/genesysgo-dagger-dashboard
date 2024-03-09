@@ -40,7 +40,7 @@ function statusHelper(status: string) {
   }
 }
 
-function backgroundColorHelper(status: string) {
+function statusColorHelper(status: string) {
   switch (status) {
     case "top_150":
     case "up":
@@ -56,7 +56,7 @@ function backgroundColorHelper(status: string) {
   }
 }
 
-function backgroundColorPctHelper(value: number) {
+function percentageColorHelper(value: number) {
   if (value >= 95) {
     return "bg-purple-700";
   } else if (value >= 90) {
@@ -84,7 +84,7 @@ function getNormalizedUptime(uptime: number) {
   return relativeUptime;
 }
 
-type NodeItemProps = {
+type NodeListItemProps = {
   id: string;
   is_discord_verified: boolean;
   is_up: boolean;
@@ -97,7 +97,7 @@ type NodeItemProps = {
   nodeConfig?: any;
 };
 
-export default function NodeItem(props: NodeItemProps) {
+export default function NodeListItem(props: NodeListItemProps) {
   const {
     is_discord_verified,
     is_up,
@@ -106,9 +106,8 @@ export default function NodeItem(props: NodeItemProps) {
     status,
     total_rewards,
     uptime,
-    uptimeStr,
+    nodeConfig,
   } = props;
-  const nodeConfig: NodeInfo = props.nodeConfig || undefined;
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
   const [shdwBalance, setShdwBalance] = useState<number | null>(null);
   const [shdwStake, setShdwStake] = useState<number | null>(null);
@@ -271,25 +270,27 @@ export default function NodeItem(props: NodeItemProps) {
         is_up ? "" : "text-gray-400"
       } w-full flex flex-col p-4 gap-2 bg-[#1C2027] hover:bg-gray-900 text-gray-300`}
     >
+      {/* NODE */}
       <div className="flex gap-3 justify-start">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             {/* RANK */}
-            <div
-              className={`rounded-lg h-12 w-12
+            <div className="w-24 flex items-center justify-start">
+              <div
+                className={`w-full rounded-lg h-12
                 flex items-center justify-center
-                ${backgroundColorHelper(
+                ${statusColorHelper(
                   is_up ? status : "down"
                 )} p-1 px-2 font-semibold`}
-            >
-              #{rank}
+              >
+                #{rank}
+              </div>
             </div>
 
             <div className="w-full flex flex-col items-center gap-1">
               <div className="w-full flex items-center justify-between">
                 {/* NODE ID */}
-
-                <div className="flex text-left items-center">
+                <div className="flex text-gray-300 text-left items-center">
                   <Link
                     className="hover:underline"
                     href={`https://solana.fm/account/${id}`}
@@ -330,17 +331,6 @@ export default function NodeItem(props: NodeItemProps) {
                     </div>
                   </CopyToClipboard>
                 </div>
-
-                {/* STATUS */}
-                {/* <span className="px-4">
-                  <span
-                    className={`${backgroundColorHelper(
-                      status
-                    )} px-4 py-1 rounded-full uppercase text-xs font-semibold w-64`}
-                  >
-                    {statusHelper(status)}
-                  </span>
-                </span> */}
               </div>
 
               <div className="w-full flex items-center justify-start gap-2">
@@ -376,10 +366,9 @@ export default function NodeItem(props: NodeItemProps) {
           </div>
         </div>
       </div>
-      {/* <span className="block text-center pr-4 text-lg">#{rank}</span> */}
 
       <div className="w-full flex flex-col gap-1 px-1">
-        {/* NODE SPECS */}
+        {/* SPECS */}
         {nodeConfig && (
           <div className="w-full flex flex-col gap-1 items-center text-gray-300">
             {/* CPU */}
@@ -503,11 +492,7 @@ export default function NodeItem(props: NodeItemProps) {
           <div className="w-full flex gap-2 items-center">
             <span className="font-semibold text-sm">TOTAL UPTIME</span>
             <span className="">{secondsToDhms(uptime, true)}</span>
-            <span
-              className={`block ${backgroundColorPctHelper(
-                getNormalizedUptime(uptime) * 100
-              )} px-2 text-sm rounded-full flex gap-2 items-center`}
-            >
+            <span className={`font-semibold text-xs text-gray-500`}>
               {getNormalizedUptime(uptime) >= 0.95 ? (
                 <Link
                   href="https://docs.shdwdrive.com/token/rewards#operatorss"
@@ -524,7 +509,7 @@ export default function NodeItem(props: NodeItemProps) {
               ) : (
                 ""
               )}
-              {formatNumbers(getNormalizedUptime(uptime) * 100)}%{" "}
+              ({formatNumbers(getNormalizedUptime(uptime) * 100)}%)
             </span>
           </div>
 
@@ -532,17 +517,13 @@ export default function NodeItem(props: NodeItemProps) {
             <div className="w-full flex gap-2 items-center">
               <span className="font-semibold text-sm">EARNING UPTIME</span>
               <span className="text-sm">{secondsToDhms(eligibleUptime)}</span>
-
-              <span className={`flex items-center`}>
-                <span
-                  className={`block ${backgroundColorPctHelper(
-                    getNormalizedUptime(eligibleUptime) * 100
-                  )} px-2 text-sm rounded-full flex gap-2 items-center`}
-                  title="Percentage of uptime node was eligible for rewards during Testnet2."
-                >
-                  {formatNumbers(getNormalizedUptime(eligibleUptime) * 100)}%
-                </span>
-              </span>
+              <span
+                className={`font-semibold text-xs text-gray-500`}
+                title="Percentage of uptime node was eligible for rewards during Testnet2."
+              >
+                ({formatNumbers(getNormalizedUptime(eligibleUptime) * 100)}%)
+              </span>{" "}
+              <span className={`flex items-center`}></span>
             </div>
           ) : (
             <></>
@@ -569,7 +550,7 @@ export default function NodeItem(props: NodeItemProps) {
 
         {/* TOTAL REWARDS */}
         <div className="flex items-center gap-1 text-gray-300">
-          <div className="font-semibold uppercase">Rewards:</div>
+          <div className="font-semibold uppercase">Rewards</div>
           <div className="">
             {formatNumbers(parseInt(total_rewards) / 10 ** 9)}
           </div>

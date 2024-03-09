@@ -7,6 +7,8 @@ import { useState } from "react";
 import { formatNumbers } from "../utils/string";
 import Image from "next/image";
 import { Node } from "../types";
+import NodeLimit from "./NodeLimit";
+import NodeSort from "./NodeSort";
 
 type ControlPanelProps = {
   keyword: string;
@@ -81,10 +83,18 @@ export default function ControlPanel({
         </div>
       )}
 
-      {currentControl === "refresh" && (
-        <div className="">
-          {/* REFRESH */}
-          <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
+      {currentControl === "options" && (
+        <div className="h-full flex gap-2">
+          {/* OPTIONS */}
+          <div className="w-40 h-full">
+            <NodeRefresh refresh={refresh} setRefresh={setRefresh} />
+          </div>
+          <div className="w-full h-full">
+            <NodeLimit limit={limit} setLimit={setLimit} />
+          </div>
+          <div className="hidden sm:flex">
+            <NodeSort sort={sort} setSort={setSort} />
+          </div>
         </div>
       )}
 
@@ -142,19 +152,24 @@ export default function ControlPanel({
                 : "bg-[#33343E] text-gray-300"
             }`}
           onClick={() => {
-            setCurrentControl(currentControl !== "refresh" ? "refresh" : null);
+            setCurrentControl(currentControl !== "options" ? "options" : null);
           }}
         >
           <svg
             stroke="currentColor"
-            fill="currentColor"
-            strokeWidth="0"
-            viewBox="0 0 512 512"
+            fill="none"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             height="20"
             width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M256 388c-72.597 0-132-59.405-132-132 0-72.601 59.403-132 132-132 36.3 0 69.299 15.4 92.406 39.601L278 234h154V80l-51.698 51.702C348.406 99.798 304.406 80 256 80c-96.797 0-176 79.203-176 176s78.094 176 176 176c81.045 0 148.287-54.134 169.401-128H378.85c-18.745 49.561-67.138 84-122.85 84z"></path>
+            <path d="M20 7h-9"></path>
+            <path d="M14 17H5"></path>
+            <circle cx="17" cy="17" r="3"></circle>
+            <circle cx="7" cy="7" r="3"></circle>
           </svg>
         </Button>
       </div>

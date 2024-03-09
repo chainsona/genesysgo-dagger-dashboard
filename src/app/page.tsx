@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import ControlPanel from "./components/ControlPanel";
 import Header from "./components/Header";
+import NodeList from "./components/NodeList";
 import NodeStats from "./components/NodeStats";
 import NodeTable from "./components/NodeTable";
 
@@ -34,6 +35,19 @@ export default function Home() {
   const [nodesInfo, setNodesInfo] = useState<any>({});
   const [refresh, setRefresh] = useState(getStorage("refresh") || "5");
   const [sort, setSort] = useState(getStorage("sort") || "rank-desc");
+  const [width, setWidth] = useState<number>(() => {
+    try {
+      return window.innerWidth;
+    } catch (e) {
+      return 0;
+    }
+  });
+
+  const isMobile = width <= 768;
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
 
   const fetchNetwork = useCallback(() => {
     fetch("https://api.dagger-testnet.shdwdrive.com/rpc", {
@@ -89,10 +103,6 @@ export default function Home() {
         console.error(JSON.stringify(e));
       });
   }, []);
-
-  useEffect(() => {
-    console.log("nodesInfo", nodesInfo);
-  }, [nodesInfo]);
 
   useEffect(() => {
     fetchNetwork();
@@ -177,6 +187,15 @@ export default function Home() {
     setFilter(keyword);
   }, [limit, keyword, setFilter]);
 
+  useEffect(() => {
+    if (!window) return;
+
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
   return (
     <main
       className="overflow-hidden min-h-screen w-full
@@ -186,20 +205,36 @@ export default function Home() {
         <Header />
       </div>
 
-      <div className="flex flex-col gap-4 p-4 pt-20 pb-24">
+      <div className="flex flex-col md:flex-row-revers gap-4 p-4 pt-20 pb-24">
         <NodeStats network={network} nodes={nodes} />
 
-        <NodeTable
-          maxPage={Math.ceil(
-            (!!keyword ? visibleNodes.length : nodes.length) / limit
+        <div className="grow">
+          {isMobile ? (
+            <NodeList
+              maxPage={Math.ceil(
+                (!!keyword ? visibleNodes.length : nodes.length) / limit
+              )}
+              nodes={visibleNodes}
+              nodesInfo={nodesInfo}
+              page={page}
+              sort={sort}
+              setPage={setPage}
+              setSort={setSort}
+            />
+          ) : (
+            <NodeTable
+              maxPage={Math.ceil(
+                (!!keyword ? visibleNodes.length : nodes.length) / limit
+              )}
+              nodes={visibleNodes}
+              nodesInfo={nodesInfo}
+              page={page}
+              sort={sort}
+              setPage={setPage}
+              setSort={setSort}
+            />
           )}
-          nodes={visibleNodes}
-          nodesInfo={nodesInfo}
-          page={page}
-          sort={sort}
-          setPage={setPage}
-          setSort={setSort}
-        />
+        </div>
       </div>
 
       <div className="z-10 fixed bottom-4 left-6 right-6">

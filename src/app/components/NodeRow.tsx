@@ -4,7 +4,7 @@ import * as anchor from "@coral-xyz/anchor";
 import Image from "next/image";
 import Link from "next/link";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Table } from "react-daisyui";
 import { toast } from "react-toastify";
@@ -29,10 +29,6 @@ function ellipsis(str: string, max: number) {
 }
 
 function statusHelper(status: string) {
-  // top_150
-  // queued
-  // not_eligible
-
   switch (status) {
     case "top_150":
       return "Earning";
@@ -45,7 +41,7 @@ function statusHelper(status: string) {
   }
 }
 
-function backgroundColorHelper(status: string) {
+function statusColorHelper(status: string) {
   switch (status) {
     case "top_150":
       return "bg-green-950";
@@ -60,7 +56,7 @@ function backgroundColorHelper(status: string) {
   }
 }
 
-function backgroundColorPctHelper(value: number) {
+function percentageColorHelper(value: number) {
   if (value >= 95) {
     return "bg-purple-700";
   } else if (value >= 90) {
@@ -98,21 +94,19 @@ type TableRowProps = {
   total_rewards: string;
   uptime: number;
   uptimeStr: string;
-  nodeConfig?: any;
+  nodeConfig?: NodeInfo;
 };
 
-export default function TableRow(props: TableRowProps) {
-  const {
-    is_discord_verified,
-    is_up,
-    id,
-    rank,
-    status,
-    total_rewards,
-    uptime,
-    uptimeStr,
-  } = props;
-  const nodeConfig: NodeInfo = props.nodeConfig || undefined;
+export default function TableRow({
+  is_discord_verified,
+  is_up,
+  id,
+  rank,
+  status,
+  total_rewards,
+  uptime,
+  nodeConfig,
+}: TableRowProps) {
   const [eligibleUptime, setEligibleUptime] = useState<number | null>(null);
   const [shdwBalance, setShdwBalance] = useState<number | null>(null);
   const [shdwStake, setShdwStake] = useState<number | null>(null);
@@ -271,17 +265,26 @@ export default function TableRow(props: TableRowProps) {
   return (
     <Table.Row
       key={id}
-      className={`${backgroundColorHelper(is_up ? "up" : "down")} ${
-        is_up ? "" : "text-gray-400"
-      } md:h-20 text-center flex sm:table-cell flex-col sm:table-row items-center justify-center py-4 sm=py-0 gap-1 sm:gap-0 hover:bg-gray-900`}
+      className={`md:h-20 flex sm:table-cell flex-col sm:table-row
+        items-center justify-center gap-1 py-4 sm=py-0
+        bg-[#1C2027] hover:bg-gray-900 text-center text-gray-300`}
     >
       {/* RANK */}
-      <span className="block text-center pr-4 text-lg">#{rank}</span>
+      {/* <span className="block text-center pr-4 text-lg">#{rank}</span> */}
+      <div className="w-24 flex items-center justify-center">
+        <div
+          className={`rounded-lg h-12
+        flex items-center justify-center
+        ${statusColorHelper(is_up ? status : "down")} p-1 px-4 font-semibold`}
+        >
+          #{rank}
+        </div>
+      </div>
 
-      {/* NODE ID */}
-      <span className="flex flex-col gap-1 items-center">
+      <div className="flex flex-col gap-1 items-center">
+        {/* NODE ID */}
         <div className="items-center">
-          <span className="hidden sm:flex text-left items-center">
+          <div className="hidden sm:flex text-left items-center">
             <Link
               className="hover:underline"
               href={`https://solana.fm/account/${id}`}
@@ -308,7 +311,7 @@ export default function TableRow(props: TableRowProps) {
                 </svg>
               </div>
             </CopyToClipboard>
-          </span>
+          </div>
           <span className="sm:hidden flex text-left items-center">
             {ellipsis(id, 16)}{" "}
             <CopyToClipboard text={id}>
@@ -337,8 +340,10 @@ export default function TableRow(props: TableRowProps) {
             </CopyToClipboard>
           </span>
         </div>
+
+        {/* NODE CONFIG */}
         {nodeConfig && (
-          <div className="flex flex-col 2xl:flex-row gap-1 items-center text-gray-300">
+          <div className="flex flex-col 2xl:flex-row gap-1 items-center text-gray-400">
             {/* CPU */}
             <div className="flex gap-1 items-center">
               <svg
@@ -420,7 +425,7 @@ export default function TableRow(props: TableRowProps) {
                 </div>
               </div>
 
-              {/* WIELD */}
+              {/* SHDW NODE CLIENT */}
               <div className="flex gap-1 items-center">
                 <svg
                   stroke="currentColor"
@@ -445,7 +450,7 @@ export default function TableRow(props: TableRowProps) {
             </div>
           </div>
         )}
-      </span>
+      </div>
 
       {/* AVAILABILITY */}
       <span className="uppercase text-sm font-semibold">
@@ -453,15 +458,15 @@ export default function TableRow(props: TableRowProps) {
       </span>
 
       {/* STATUS */}
-      <span className="px-4">
-        <span
-          className={`${backgroundColorHelper(
+      <div className="w-32 px-4">
+        <div
+          className={`w-full ${statusColorHelper(
             status
-          )} px-4 sm:px-6 py-1 sm:py-2 rounded-full uppercase text-xs sm:text-sm font-semibold w-64`}
+          )} px-4 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold`}
         >
           {statusHelper(status)}
-        </span>
-      </span>
+        </div>
+      </div>
 
       {/* DISCORD */}
       <span className="flex text-center items-center gap-2">
@@ -487,71 +492,51 @@ export default function TableRow(props: TableRowProps) {
           <div className="">
             {formatNumbers((shdwBalance || 0) + (shdwStake || 0))}
           </div>
-          <div className="">
+          {/* <div className="">
             <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
-          </div>
+          </div> */}
         </div>
 
-        <span className="text-sm">{formatNumbers(shdwStake || 0)}</span>
+        <span className="text-sm text-gray-400">{formatNumbers(shdwStake || 0)}</span>
       </span>
 
       {/* UPTIME */}
-      <span className="flex flex-col gap-1 items-center justify-center px-4">
+      <div className="w-52 flex flex-col gap-1 items-center justify-center px-4">
         <div className="flex gap-2 items-center">
           <span className="">{secondsToDhms(uptime, true)}</span>
-          <span
-            className={`block ${backgroundColorPctHelper(
-              getNormalizedUptime(uptime) * 100
-            )} px-2 text-sm rounded-full flex gap-2 items-center`}
-          >
-            {getNormalizedUptime(uptime) >= 0.95 ? (
-              <Link
-                href="https://docs.shdwdrive.com/token/rewards#operatorss"
-                passHref
-                target="_blank"
-              >
-                <div
-                  className=""
-                  title="Node qualifies for additional rewards for uptime >=2,096 hours (approx. 95% of Testnet2)."
-                >
-                  <Image src="/shdw.png" alt="SHDW" height={12} width={12} />
-                </div>
-              </Link>
-            ) : (
-              ""
-            )}
-            {formatNumbers(getNormalizedUptime(uptime) * 100)}%{" "}
+          <span className={`font-semibold text-xs text-gray-500`}>
+            ({formatNumbers(getNormalizedUptime(uptime) * 100)}%)
           </span>
         </div>
 
         {eligibleUptime !== null ? (
-          <div className="flex gap-2 items-center">
-            <span className="text-sm">{secondsToDhms(eligibleUptime)}</span>
+          <div className="flex gap-2 justify-center items-center">
+            <span className="text-sm text-gray-400">
+              {secondsToDhms(eligibleUptime)}
+            </span>
 
             <span className={`flex items-center`}>
               <span
-                className={`block ${backgroundColorPctHelper(
-                  getNormalizedUptime(eligibleUptime) * 100
-                )} px-2 text-sm rounded-full flex gap-2 items-center`}
+                className={`font-semibold text-xs text-gray-500`}
                 title="Percentage of uptime node was eligible for rewards during Testnet2."
               >
-                {formatNumbers(getNormalizedUptime(eligibleUptime) * 100)}%
+                ({formatNumbers(getNormalizedUptime(eligibleUptime) * 100)}%)
               </span>
             </span>
           </div>
         ) : (
           <></>
         )}
-      </span>
+      </div>
 
       {/* TOTAL REWARDS */}
       <span className="flex gap-2 px-4 text-right items-center justify-end">
         <div className="">
           {formatNumbers(parseInt(total_rewards) / 10 ** 9)}
         </div>
-        <div className="">
+        {/* <div className="">
           <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
-        </div>
+        </div> */}
       </span>
     </Table.Row>
   );

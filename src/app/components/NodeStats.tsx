@@ -63,25 +63,29 @@ export default function NodeStats({ network, nodes }: NodeStatsProps) {
       <div className="flex flex-col gap-1 p-4 font-semibold text-gray-300">
         <div className="text-lg font-semibold uppercase">Network</div>
 
-        <div className="flex items-end gap-2 text-gray-300">
-          <span className="font-normal text-gray-400 uppercase">
-            Last version
-          </span>
-          <span className=""> {stats.version}</span>
-          <span className="text-xs text-gray-500">
-            {stats.upgraded} (
-            {formatNumbers((stats.upgraded / stats.nodes) * 100)}%)
-          </span>
-        </div>
+        <div className="w-full flex flex-col md:flex-row md:items-end gap-1 md:gap-3">
+          <div className="flex items-end gap-2 text-gray-300">
+            <span className="font-normal text-gray-400 uppercase">
+              Last version
+            </span>
+            <span className=""> {stats.version}</span>
+            <span className="text-xs text-gray-500">
+              {stats.upgraded} (
+              {formatNumbers((stats.upgraded / stats.nodes) * 100)}%)
+            </span>
+          </div>
 
-        <div
-          className="flex items-center gap-2 text-gray-300"
-          title="Distributed SHDW"
-        >
-          <div className="font-normal text-gray-400 uppercase">Distributed</div>
-          <div className="font-semibold">{stats.rewards}</div>
-          <div className="h-3 w-3">
-            <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+          <div
+            className="flex items-center gap-2 text-gray-300"
+            title="Distributed SHDW"
+          >
+            <div className="font-normal text-gray-400 uppercase">
+              Distributed
+            </div>
+            <div className="font-semibold">{stats.rewards}</div>
+            <div className="h-3 w-3">
+              <Image src="/shdw.png" alt="SHDW" height={16} width={16} />
+            </div>
           </div>
         </div>
 
