@@ -14,6 +14,7 @@ import { NodeInfo } from "../types";
 import { formatNumbers, secondsToDhms } from "../utils/string";
 
 import idl from "../utils/shdw_reward_staking_pool.idl.json";
+import { rpcEndpoint } from "../config";
 
 const NodeWallet = require("@project-serum/anchor/dist/cjs/nodewallet");
 let nodeWallet = NodeWallet.default;
@@ -129,31 +130,27 @@ export default function TableRow({
     let assetId = getStorage(id);
     if (!assetId) {
       try {
-        const res = await fetch(
-          "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
-
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        const res = await fetch(rpcEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: "my-id",
+            method: "searchAssets",
+            params: {
+              ownerAddress: id,
+              grouping: [
+                "collection",
+                "5Jh2dkw5gimhPMkGYadWsNW837MgUxUo5wrNoNTwcV2c",
+              ],
+              burnt: false,
+              page: 1,
+              limit: 1000,
             },
-            body: JSON.stringify({
-              jsonrpc: "2.0",
-              id: "my-id",
-              method: "searchAssets",
-              params: {
-                ownerAddress: id,
-                grouping: [
-                  "collection",
-                  "5Jh2dkw5gimhPMkGYadWsNW837MgUxUo5wrNoNTwcV2c",
-                ],
-                burnt: false,
-                page: 1,
-                limit: 1000,
-              },
-            }),
-          }
-        );
+          }),
+        });
         const data = await res.json();
         const asset = data?.result?.items[0];
         if (!asset) return 0;
@@ -182,10 +179,7 @@ export default function TableRow({
 
   const fetchShdwBalance = useCallback(async () => {
     try {
-      const connection = new Connection(
-        "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
-        "confirmed"
-      );
+      const connection = new Connection(rpcEndpoint, "confirmed");
 
       // Get token accounts
       const tokenAccountsResponse =
@@ -229,12 +223,9 @@ export default function TableRow({
     );
 
     const provider = new anchor.AnchorProvider(
-      new Connection(
-        "https://mainnet.helius-rpc.com/?api-key=f92585e2-eb5d-4383-a634-3eb1de97e63b",
-        {
-          commitment: "processed",
-        }
-      ),
+      new Connection(rpcEndpoint, {
+        commitment: "processed",
+      }),
       // new anchor.Wallet(Keypair.generate()),
       wallet,
       {
