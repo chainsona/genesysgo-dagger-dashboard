@@ -1,23 +1,14 @@
 "use client";
 
-import * as anchor from "@coral-xyz/anchor";
 import Image from "next/image";
 import Link from "next/link";
-import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
 import { useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
-import { NodeInfo } from "../types";
 import { formatNumbers, secondsToDhms } from "../utils/string";
 
-import idl from "../utils/shdw_reward_staking_pool.idl.json";
 import { rpcEndpoint } from "../config";
-
-const NodeWallet = require("@project-serum/anchor/dist/cjs/nodewallet");
-let nodeWallet = NodeWallet.default;
-let wallet = new nodeWallet(Keypair.generate());
 
 function ellipsis(str: string, max: number) {
   if (str.length <= max) {
@@ -77,8 +68,9 @@ function getNormalizedUptime(uptime: number) {
 
   // Using the actual launch date of the testnet from higher uptime
   const testnet2LaunchDate = 1705289977000;
+  const testnet2EndDate = 1713290400000;
 
-  const diff = Date.now() - testnet2LaunchDate;
+  const diff = Math.min(testnet2EndDate, Date.now()) - testnet2LaunchDate;
   const cappedUptime = uptime > diff ? diff : uptime;
   const relativeUptime = cappedUptime / diff;
 
@@ -180,72 +172,20 @@ export default function NodeListItem(props: NodeListItemProps) {
 
   const fetchShdwBalance = useCallback(async () => {
     try {
-      const connection = new Connection(rpcEndpoint, "confirmed");
+      const balance = await fetch(`/api/balances?id=${id}`);
+      const data = await balance.json();
 
-      // Get token accounts
-      const tokenAccountsResponse =
-        await connection.getParsedTokenAccountsByOwner(new PublicKey(id), {
-          programId: TOKEN_PROGRAM_ID,
-        });
-      const tokenAccounts = tokenAccountsResponse.value;
-
-      const tokens = tokenAccounts.reduce((acc: any, tokenAccount: any) => {
-        acc[tokenAccount.account.data.parsed.info.mint] = {
-          account: tokenAccount.pubkey,
-          address: tokenAccount.account.data.parsed.info.mint,
-          amount: tokenAccount.account.data.parsed.info.tokenAmount.amount,
-          decimals: tokenAccount.account.data.parsed.info.tokenAmount.decimals,
-        };
-        return acc;
-      }, {});
-
-      const shdwToken = tokens["SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y"];
-      if (!shdwToken) return;
-
-      setShdwBalance(shdwToken.amount / 10 ** shdwToken.decimals);
+      setShdwBalance(data.data || 0);
     } catch (e: any) {
       console.error(JSON.stringify(e));
     }
   }, [id]);
 
   const fetchShdwStake = useCallback(async () => {
-    const pubKey = new PublicKey(id);
+    const stakedRes = await fetch(`/api/balances/staked?id=${id}`);
+    const stakedData = await stakedRes.json();
 
-    let e;
-    let [address] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("user"),
-        new PublicKey(
-          "EM2u3eTQgusA3vALZ1P6w6oZZBgRY3qvEraRKpor6kEy"
-        ).toBuffer(),
-        pubKey.toBuffer(),
-      ],
-      new PublicKey("AvqeyEDqW9jaBi7yrRA6AxJtLbMzRY9NX75HuPTMoS4i")
-    );
-
-    const provider = new anchor.AnchorProvider(
-      new Connection(rpcEndpoint, {
-        commitment: "processed",
-      }),
-      // new anchor.Wallet(Keypair.generate()),
-      wallet,
-      {
-        commitment: "processed",
-      }
-    );
-    const program = new anchor.Program(
-      idl as anchor.Idl,
-      "AvqeyEDqW9jaBi7yrRA6AxJtLbMzRY9NX75HuPTMoS4i",
-      provider
-    );
-
-    try {
-      e = await program.account.userState.fetch(address);
-    } catch (t) {
-      return null;
-    }
-
-    setShdwStake(parseInt(String(e.activeStakeScaled)) / 1e18 / 1e9);
+    setShdwStake(stakedData.data || 0);
   }, []);
 
   useEffect(() => {
